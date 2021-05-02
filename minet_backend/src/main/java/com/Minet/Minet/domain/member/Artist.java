@@ -22,7 +22,7 @@ public class Artist {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    private String artist_name;
+    private String artistName;
 
     @Enumerated(EnumType.STRING)
     private Genre genre;
