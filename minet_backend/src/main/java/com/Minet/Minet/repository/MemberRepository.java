@@ -1,6 +1,6 @@
 package com.Minet.Minet.repository;
 
-import com.Minet.Minet.domain.Member;
+import com.Minet.Minet.domain.member.Member;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
