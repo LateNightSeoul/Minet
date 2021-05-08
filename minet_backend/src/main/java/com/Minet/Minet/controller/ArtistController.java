@@ -17,10 +17,10 @@ public class ArtistController {
     @Autowired
     private ArtistService artistService;
 
-    @PostMapping("/signup/artist")
+    @PostMapping("/join/artist")
     public ResponseEntity<Artist> join(
             @RequestBody JoinArtistDto joinArtistDto
             ) {
-        return ResponseEntity.ok(artistService.saveArtist(joinArtistDto));
+        return ResponseEntity.ok(artistService.joinArtist(joinArtistDto));
     }
 }

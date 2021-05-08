@@ -1,19 +1,16 @@
 package com.Minet.Minet.service;
 
-import com.Minet.Minet.domain.Authority;
 import com.Minet.Minet.domain.member.Artist;
 import com.Minet.Minet.domain.member.Member;
 import com.Minet.Minet.dto.member.JoinArtistDto;
 import com.Minet.Minet.repository.ArtistRepository;
 import com.Minet.Minet.repository.MemberRepository;
-import com.Minet.Minet.security.Role;
-import com.sun.el.stream.Optional;
+import com.Minet.Minet.security.Authority;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Service
@@ -29,12 +26,10 @@ public class ArtistService {
     private PasswordEncoder passwordEncoder;
 
     @Transactional
-    public Artist saveArtist(JoinArtistDto joinArtistDto) {
+    public Artist joinArtist(JoinArtistDto joinArtistDto) {
         if(memberRepository.findOneByUserid(joinArtistDto.getUserid()) != null) {
             throw new RuntimeException("이미 가입된 id입니다.");
         }
-
-        Authority authority = Authority.builder().authorityName(Role.ROLE_ARTIST.toString()).build();
 
         Member member = Member.builder()
                 .username(joinArtistDto.getUsername())
@@ -43,7 +38,7 @@ public class ArtistService {
                 .phone(joinArtistDto.getPhone())
                 .enabled(true)
                 .createTime(LocalDateTime.now())
-                .isArtist(true)
+                .role(Authority.ROLE_ARTIST)
                 .build();
 
         memberRepository.save(member);
