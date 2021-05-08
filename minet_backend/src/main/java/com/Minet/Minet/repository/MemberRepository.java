@@ -4,6 +4,6 @@ import com.Minet.Minet.domain.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
-    Member findByUserid(Member member);
-    Member findByUsername(String username);
+    Member findOneByUserid(String userid);
+    Member findOneByUsername(String username);
 }

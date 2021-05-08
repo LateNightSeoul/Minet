@@ -1,17 +1,17 @@
 package com.Minet.Minet.domain.member;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.Minet.Minet.security.Authority;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import java.time.LocalDate;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Member {
 
     @Id @GeneratedValue
@@ -24,12 +24,15 @@ public class Member {
 
     private String password;
 
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "member")
+    private Artist artist;
+
     private String phone;
 
     private boolean enabled;
 
     private LocalDateTime createTime;
 
-    private boolean isArtist;
+    private Authority role;
 
 }
