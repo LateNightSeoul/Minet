@@ -1,14 +1,12 @@
 package com.Minet.Minet.controller;
 
-import com.Minet.Minet.domain.member.Artist;
 import com.Minet.Minet.domain.member.Member;
 import com.Minet.Minet.dto.TokenDto;
-import com.Minet.Minet.dto.member.JoinArtistDto;
-import com.Minet.Minet.dto.member.JoinMemberDto;
+import com.Minet.Minet.dto.member.JoinDto;
 import com.Minet.Minet.dto.member.LoginDto;
 import com.Minet.Minet.jwt.JwtFilter;
 import com.Minet.Minet.jwt.TokenProvider;
-import com.Minet.Minet.service.MemberService;
+import com.Minet.Minet.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,20 +15,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.net.http.HttpResponse;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "*")
-public class MemberController {
+public class AuthController {
 
     @Autowired
     private TokenProvider tokenProvider;
@@ -39,13 +30,14 @@ public class MemberController {
     private AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @Autowired
-    private MemberService memberService;
+    private AuthService authService;
 
-    @PostMapping("/join/member")
+
+    @PostMapping("/join")
     public ResponseEntity<Member> join(
-            @RequestBody JoinMemberDto joinMemberDto
-            ) {
-        return ResponseEntity.ok(memberService.joinMember(joinMemberDto));
+            @RequestBody JoinDto joinDto
+    ) {
+        return ResponseEntity.ok(authService.join(joinDto));
     }
 
     @PostMapping("/login")
@@ -63,7 +55,5 @@ public class MemberController {
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
 
         return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
-
     }
-
 }

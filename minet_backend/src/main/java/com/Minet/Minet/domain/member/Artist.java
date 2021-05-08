@@ -1,6 +1,7 @@
 package com.Minet.Minet.domain.member;
 
 import com.Minet.Minet.domain.enumTypes.Genre;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,6 +23,7 @@ public class Artist {
 
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
+    @JsonIgnore
     private Member member;
 
     private String artistName;

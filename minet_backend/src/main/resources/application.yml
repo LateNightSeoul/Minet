@@ -20,5 +20,5 @@ logging:
 
 jwt:
   header: Authorization
-  secret: bGF0ZW5pZ2h0aXNmdWNrZWR1cGJ1dGxhdGVuaWdodGNvZGluZ2lzIE5PVyBSSVNJTkcgaGFoYWhhaGEh
+  secret: bGF0ZW5pZ2h0aXNmdWNrZWR1cGJ1dGxhdGVuaWdodGNvZGluZ2lzIE5PVyBSSVNJTkcgaGFoYWhhaGEharegWGRsgsrgsrgsSsgq
   token-validity-in-seconds: 86400

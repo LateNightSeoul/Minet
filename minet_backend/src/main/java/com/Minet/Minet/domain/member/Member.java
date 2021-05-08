@@ -1,12 +1,10 @@
 package com.Minet.Minet.domain.member;
 
 import com.Minet.Minet.security.Authority;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -25,6 +23,9 @@ public class Member {
     private String userid;
 
     private String password;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "member")
+    private Artist artist;
 
     private String phone;
 
