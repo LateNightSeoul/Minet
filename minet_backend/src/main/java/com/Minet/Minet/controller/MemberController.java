@@ -21,36 +21,5 @@ public class MemberController {
     @Autowired
     private MemberService memberService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @PostMapping(value = "/hi")
-    public ResponseEntity<Member> info2(){
-        Member user = new Member();
-        user.setUserName("이해석");
-        user.setUserId("leehae8");
-        return ResponseEntity.ok(user);
-    }
-
-    @GetMapping(value = "/hi")
-    public List<Member> find() {
-        Member member = new Member();
-        member.setUserName("이해석");
-        Member member2 = new Member();
-        member2.setUserName("최준혁");
-
-
-        return Arrays.asList(member, member2);
-    }
-
-    @PostMapping("/join")
-    public HttpStatus createMember(@RequestBody Map<String, String> param){
-        Member member = new Member();
-        member.setUserId(param.get("id"));
-        member.setPassword(passwordEncoder.encode(param.get("password")));
-
-        memberService.creatMember(member);
-        return HttpStatus.OK;
-    }
 
 }
