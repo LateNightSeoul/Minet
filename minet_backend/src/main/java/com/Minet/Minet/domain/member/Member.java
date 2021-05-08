@@ -1,7 +1,6 @@
 package com.Minet.Minet.domain.member;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +11,9 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Member {
 
     @Id @GeneratedValue
