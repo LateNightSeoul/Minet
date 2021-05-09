@@ -43,7 +43,7 @@ public class AuthService {
                 .phone(joinDto.getPhone())
                 .enabled(true)
                 .createTime(LocalDateTime.now())
-                .role(joinDto.getAuthority())
+                .authority(joinDto.getAuthority())
                 .build();
 
         Member savedMember = memberRepository.save(member);

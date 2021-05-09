@@ -33,6 +33,6 @@ public class Member {
 
     private LocalDateTime createTime;
 
-    private Authority role;
+    private Authority authority;
 
 }
