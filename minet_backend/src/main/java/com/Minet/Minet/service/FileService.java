@@ -6,13 +6,19 @@ import com.Minet.Minet.domain.music.Album;
 import com.Minet.Minet.domain.music.Song;
 import com.Minet.Minet.dto.file.UploadSongDto;
 import com.Minet.Minet.exception.FileStorageException;
+import com.Minet.Minet.repository.AlbumRepository;
+import com.Minet.Minet.repository.ArtistRepository;
 import com.Minet.Minet.repository.MemberRepository;
 import com.Minet.Minet.repository.SongRepository;
 import com.Minet.Minet.security.Authority;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.persistence.EntityManager;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.security.Principal;
@@ -26,7 +32,16 @@ public class FileService {
     MemberRepository memberRepository;
 
     @Autowired
+    ArtistRepository artistRepository;
+
+    @Autowired
+    AlbumRepository albumRepository;
+
+    @Autowired
     SongRepository songRepository;
+
+    @Autowired
+    EntityManager em;
 
     private final Path fileStorageLocation;
 
@@ -44,12 +59,19 @@ public class FileService {
                 throw new FileStorageException("파일 이름에는 ..이 들어갈 수 없습니다.");
             }
 
+            Path targetFolder = this.fileStorageLocation.resolve(artist.getArtistName());
+
+            if(!Files.exists(targetFolder)) {
+                Files.createDirectory(targetFolder);
+            }
+
             Path targetPath = this.fileStorageLocation.resolve(fileName);
+
             if(Files.exists(targetPath)) {
                 throw new FileStorageException("중복되는 파일명 입니다.");
             }
 
-            Files.copy(file.getInputStream(), targetPath, StandardCopyOption.ATOMIC_MOVE);
+            Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
 
         } catch (FileStorageException e) {
             e.printStackTrace();
@@ -67,14 +89,23 @@ public class FileService {
         }
         return false;
     }
-
+    @Transactional
     public Song saveSongInfo(MultipartFile uploadFile, Principal principal,
                              String fileName, String fileDownloadUri) {
 
+        Member member = memberRepository.findOneByUserid(principal.getName()).get();
+        Artist findArtist = member.getArtist();
+
         Album album = new Album();
-        album.setArtist(memberRepository.findOneByUserid(principal.getName()).get().getArtist());
+        album.setArtist(findArtist);
+        album.setId(Long.valueOf(3));
+        albumRepository.save(album);
+        em.flush();
+
+        System.out.println("***********************************************");
 
         Song song = Song.builder()
+                .id(Long.valueOf(3))
                 .album(album)
                 .createTime(LocalDateTime.now())
                 .fileType(uploadFile.getContentType())
@@ -83,6 +114,8 @@ public class FileService {
                 .photoUrl(null)
                 .size(uploadFile.getSize())
                 .build();
+
+        System.out.println(song.getAlbum().getId() + " **********************" + song.getAlbum().getArtist().getId() + "++++++++" + song.getId());
 
         return songRepository.save(song);
     }

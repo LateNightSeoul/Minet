@@ -31,6 +31,7 @@ public class FileController {
 
     @PostMapping("/upload/song")
     public UploadSongResponse uploadSong(@RequestPart("file") MultipartFile uploadFile, Principal principal) {
+
         String fileName = fileService.saveSong(uploadFile, principal);
 
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/file/download/")
