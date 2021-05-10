@@ -6,15 +6,22 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.io.Serializable;
 
-@AllArgsConstructor
+@Embeddable
+@Getter @Setter
 @NoArgsConstructor
-@Getter
-@Setter
+@AllArgsConstructor
 public class ArtistChildId implements Serializable {
-    private Long id;
-    private Artist artist;
+
+    private Long artist_id;
+
+    @Column(name = "album_id")
+    private Long albumId;
 
     @Override
     public int hashCode() {

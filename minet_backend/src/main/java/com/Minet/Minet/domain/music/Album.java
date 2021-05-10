@@ -18,21 +18,19 @@ import static javax.persistence.FetchType.*;
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@IdClass(ArtistChildId.class)
 public class Album {
 
-    @Id @GeneratedValue
-    @Column(name = "album_id")
-    private Long id;
+    @EmbeddedId
+    private ArtistChildId artistChildId;
 
-    @Id
+    @MapsId("artist_id")
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "artist_id", referencedColumnName = "artist_id")
     private Artist artist;
 
-    private String albumName;
-
     private LocalDate releaseDate;
+
+    private String albumName;
 
     @Enumerated(EnumType.STRING)
     private Genre genre;
@@ -40,7 +38,4 @@ public class Album {
     private String photoUrl;
 
     private String albumUrl;
-
-
-
 }

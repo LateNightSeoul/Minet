@@ -4,6 +4,7 @@ import com.Minet.Minet.domain.member.Artist;
 import com.Minet.Minet.domain.member.Member;
 import com.Minet.Minet.domain.music.Album;
 import com.Minet.Minet.domain.music.Song;
+import com.Minet.Minet.domain.music.ids.ArtistChildId;
 import com.Minet.Minet.dto.file.UploadSongDto;
 import com.Minet.Minet.exception.FileStorageException;
 import com.Minet.Minet.repository.AlbumRepository;
@@ -95,17 +96,15 @@ public class FileService {
 
         Member member = memberRepository.findOneByUserid(principal.getName()).get();
         Artist findArtist = member.getArtist();
-
         Album album = new Album();
+        ArtistChildId artistChildId = new ArtistChildId(findArtist.getId(), Long.valueOf(1));
         album.setArtist(findArtist);
-        album.setId(Long.valueOf(3));
-        albumRepository.save(album);
-        em.flush();
+        album.setArtistChildId(artistChildId);
+        Album saveAlbum = albumRepository.save(album);
 
         System.out.println("***********************************************");
 
         Song song = Song.builder()
-                .id(Long.valueOf(3))
                 .album(album)
                 .createTime(LocalDateTime.now())
                 .fileType(uploadFile.getContentType())
@@ -115,7 +114,7 @@ public class FileService {
                 .size(uploadFile.getSize())
                 .build();
 
-        System.out.println(song.getAlbum().getId() + " **********************" + song.getAlbum().getArtist().getId() + "++++++++" + song.getId());
+        System.out.println(" **********************" + song.getAlbum().getArtist().getId() + "++++++++" );
 
         return songRepository.save(song);
     }

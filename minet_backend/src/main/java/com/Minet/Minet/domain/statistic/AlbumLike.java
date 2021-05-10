@@ -3,6 +3,7 @@ package com.Minet.Minet.domain.statistic;
 import com.Minet.Minet.domain.member.Member;
 import com.Minet.Minet.domain.music.Album;
 import com.Minet.Minet.domain.music.ids.AlbumChildId;
+import com.Minet.Minet.domain.music.ids.SongChildId;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,18 +13,16 @@ import static javax.persistence.FetchType.*;
 
 @Entity
 @Getter @Setter
-@IdClass(AlbumChildId.class)
 public class AlbumLike {
-
-    @Id @GeneratedValue
-    @Column(name = "album_like_id")
-    private Long id;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @Id
+    @EmbeddedId
+    private AlbumChildId albumChildId;
+
+    @MapsId("artistChildId")
     @ManyToOne(fetch = LAZY)
     @JoinColumns({
             @JoinColumn(name = "album_id"),

@@ -17,14 +17,12 @@ import static javax.persistence.FetchType.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@IdClass(AlbumChildId.class)
 public class Song {
 
-    @Id @GeneratedValue
-    @Column(name = "song_id")
-    private Long id;
+    @EmbeddedId
+    private AlbumChildId albumChildId;
 
-    @Id
+    @MapsId("artistChildId")
     @ManyToOne(fetch = LAZY)
     @JoinColumns({
             @JoinColumn(name = "artist_id", referencedColumnName = "artist_id"),
@@ -34,9 +32,9 @@ public class Song {
 
     private Genre genre;
 
-    private String songName;
-
     private String photoUrl;
+
+    private String songName;
 
     private String songUrl;
 

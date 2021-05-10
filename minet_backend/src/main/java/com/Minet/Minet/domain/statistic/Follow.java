@@ -12,6 +12,7 @@ import static javax.persistence.FetchType.*;
 @Entity
 @Getter @Setter
 public class Follow {
+
     @Id @GeneratedValue
     @Column(name = "column_id")
     private Long id;

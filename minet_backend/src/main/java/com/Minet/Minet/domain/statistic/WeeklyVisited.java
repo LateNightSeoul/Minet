@@ -14,9 +14,12 @@ import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter @Setter
-@IdClass(SongChildId.class)
 public class WeeklyVisited {
-    @Id
+
+    @EmbeddedId
+    private SongChildId songChildId;
+
+    @MapsId("albumChildId")
     @ManyToOne(fetch = LAZY)
     @JoinColumns({
             @JoinColumn(name="song_id"),

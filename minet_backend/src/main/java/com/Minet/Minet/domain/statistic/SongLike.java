@@ -12,10 +12,13 @@ import static javax.persistence.FetchType.*;
 
 @Entity
 @Getter @Setter
-@IdClass(SongChildId.class)
 public class SongLike {
 
-    @Id @ManyToOne(fetch = LAZY)
+    @EmbeddedId
+    private SongChildId songChildId;
+
+    @MapsId("albumChildId")
+    @ManyToOne(fetch = LAZY)
     @JoinColumns({
             @JoinColumn(name = "artist_id"),
             @JoinColumn(name = "album_id"),
