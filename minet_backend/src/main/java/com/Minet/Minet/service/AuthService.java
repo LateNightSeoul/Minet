@@ -32,7 +32,7 @@ public class AuthService {
 
     @Transactional
     public Member join(JoinDto joinDto) {
-        if(memberRepository.findOneByUserid(joinDto.getUserid()) != null) {
+        if(!memberRepository.findOneByUserid(joinDto.getUserid()).isEmpty()) {
             throw new RuntimeException("이미 가입된 id입니다.");
         }
 

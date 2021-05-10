@@ -35,6 +35,8 @@ public class Album {
 
     private String photoUrl;
 
+    private String albumUrl;
+
 
 
 }
