@@ -1,11 +1,14 @@
 package com.Minet.Minet.domain.member;
 
 import com.Minet.Minet.domain.enumTypes.Genre;
+import com.Minet.Minet.domain.music.Album;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static javax.persistence.FetchType.*;
 
@@ -25,6 +28,9 @@ public class Artist {
     @JoinColumn(name = "member_id")
     @JsonIgnore
     private Member member;
+
+    @OneToMany(mappedBy = "artist", cascade = CascadeType.ALL)
+    private List<Album> albums = new ArrayList<>();
 
     private String artistName;
 

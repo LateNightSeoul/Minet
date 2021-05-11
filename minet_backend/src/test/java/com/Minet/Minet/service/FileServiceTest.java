@@ -5,6 +5,7 @@ import com.Minet.Minet.domain.member.Member;
 import com.Minet.Minet.domain.music.Album;
 import com.Minet.Minet.domain.music.ids.ArtistChildId;
 import com.Minet.Minet.repository.AlbumRepository;
+import com.Minet.Minet.repository.ArtistRepository;
 import com.Minet.Minet.repository.MemberRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,6 +34,9 @@ public class FileServiceTest {
     @Autowired
     AlbumRepository albumRepository;
 
+    @Autowired
+    ArtistRepository artistRepository;
+
     @Test
     public void 파일이름변경테스트(){
         File file = new File("nav.mp3");
@@ -49,21 +53,24 @@ public class FileServiceTest {
     @Transactional
     @Rollback(false)
     public void 엔티티저장_식별관계() {
-        Member member = memberRepository.findOneByUserid("leehae10").get();
-        Artist findArtist = member.getArtist();
-        Album album = new Album();
-        ArtistChildId artistChildId = new ArtistChildId(findArtist.getId(), Long.valueOf(1));
-        album.setArtist(findArtist);
-        album.setAlbumName("제발 그만  ");
-        album.setArtistChildId(artistChildId);
-        Album saveAlbum = albumRepository.save(album);
+        Member member = new Member();
 
-        Album album2 = new Album();
-        ArtistChildId artistChildId2 = new ArtistChildId(findArtist.getId(), Long.valueOf(111));
-        album2.setArtist(findArtist);
-        album2.setAlbumName("안녕 ");
-        album2.setArtistChildId(artistChildId2);
-        Album saveAlbum2 = albumRepository.save(album2);
+        Artist artist = new Artist();
+
+        artist.setArtistName("ㅎㅇ용");
+        member.setUserid("leehae8");
+        member.setArtist(artist);
+
+        memberRepository.save(member);
+
+        Album album = new Album();
+        ArtistChildId artistChildId = new ArtistChildId(artist.getId(), "11335");
+        album.setAlbumName("제발 그만");
+        album.setArtistChildId(artistChildId);
+        album.setArtist(artist);
+
+        albumRepository.save(album);
+
     }
 
     @Test

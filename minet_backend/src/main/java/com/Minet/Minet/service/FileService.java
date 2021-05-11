@@ -13,6 +13,8 @@ import com.Minet.Minet.repository.MemberRepository;
 import com.Minet.Minet.repository.SongRepository;
 import com.Minet.Minet.security.Authority;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -23,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.security.Principal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -50,38 +53,45 @@ public class FileService {
         this.fileStorageLocation = Paths.get(filePath.getPath()).toAbsolutePath().normalize();
     }
 
-    public String saveSong(MultipartFile file, Principal principal){
-        Artist artist = memberRepository.findOneByUserid(principal.getName()).get().getArtist();
-        String fileName = StringUtils.cleanPath(artist.getArtistName() + "/" + file.getOriginalFilename());
-        String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1);
+    public UploadSongDto getSongDto(JSONObject jsonObject) throws JSONException {
+        UploadSongDto uploadSongDto = new UploadSongDto();
+        uploadSongDto.setSongName(jsonObject.getString("songName"));
+        uploadSongDto.setAlbumName(jsonObject.getString("albumName"));
+        uploadSongDto.setArtist(jsonObject.getString("artist"));
+        uploadSongDto.setGenre(jsonObject.getString("genre"));
+        uploadSongDto.setReleaseDate((LocalDate) jsonObject.get("releaseDate"));
 
-        try {
-            if(fileName.contains("..")) {
-                throw new FileStorageException("파일 이름에는 ..이 들어갈 수 없습니다.");
-            }
+        return uploadSongDto;
+    }
 
-            Path targetFolder = this.fileStorageLocation.resolve(artist.getArtistName());
+    public String saveSong(MultipartFile file, Principal principal, UploadSongDto uploadSongDto) throws FileStorageException, IOException{
+        String artistName = uploadSongDto.getArtist();
+        String fileName = StringUtils.cleanPath(artistName + "/" + uploadSongDto.getAlbumName() + "/" + file.getOriginalFilename());
 
-            if(!Files.exists(targetFolder)) {
-                Files.createDirectory(targetFolder);
-            }
+        makedir(artistName, uploadSongDto.getAlbumName());
 
-            Path targetPath = this.fileStorageLocation.resolve(fileName);
+        Path targetPath = this.fileStorageLocation.resolve(fileName);
 
-            if(Files.exists(targetPath)) {
-                throw new FileStorageException("중복되는 파일명 입니다.");
-            }
-
-            Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
-
-        } catch (FileStorageException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(Files.exists(targetPath)) {
+            throw new FileStorageException("중복되는 파일명 입니다.");
         }
+
+        Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
 
         return fileName;
     }
+
+    public void makedir(String artistName, String albumName) throws IOException {
+        String dirPath = StringUtils.cleanPath(artistName + "/" + albumName);
+
+        Path targetFolder = this.fileStorageLocation.resolve(dirPath);
+
+        if(!Files.exists(targetFolder)) {
+            Files.createDirectory(targetFolder);
+        }
+    }
+
+    
 
     public boolean isArtist(String userId) {
         Optional<Member> member = memberRepository.findOneByUserid(userId);
@@ -90,6 +100,9 @@ public class FileService {
         }
         return false;
     }
+
+
+
     @Transactional
     public Song saveSongInfo(MultipartFile uploadFile, Principal principal,
                              String fileName, String fileDownloadUri) {
@@ -97,7 +110,7 @@ public class FileService {
         Member member = memberRepository.findOneByUserid(principal.getName()).get();
         Artist findArtist = member.getArtist();
         Album album = new Album();
-        ArtistChildId artistChildId = new ArtistChildId(findArtist.getId(), Long.valueOf(1));
+        ArtistChildId artistChildId = new ArtistChildId(findArtist.getId(), "안녕");
         album.setArtist(findArtist);
         album.setArtistChildId(artistChildId);
         Album saveAlbum = albumRepository.save(album);
@@ -109,7 +122,6 @@ public class FileService {
                 .createTime(LocalDateTime.now())
                 .fileType(uploadFile.getContentType())
                 .downloadUri(fileDownloadUri)
-                .songUrl(fileName)
                 .photoUrl(null)
                 .size(uploadFile.getSize())
                 .build();

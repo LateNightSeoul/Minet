@@ -18,8 +18,8 @@ public class ChartSong {
     @MapsId("albumChildId")
     @ManyToOne(fetch = LAZY)
     @JoinColumns({
-            @JoinColumn(name="song_id", referencedColumnName = "song_id"),
-            @JoinColumn(name = "album_id", referencedColumnName = "album_id"),
+            @JoinColumn(name="song_url", referencedColumnName = "song_url"),
+            @JoinColumn(name = "album_url", referencedColumnName = "album_url"),
             @JoinColumn(name = "artist_id", referencedColumnName = "artist_id")
     })
     private Song song;

@@ -20,8 +20,8 @@ public class ArtistChildId implements Serializable {
 
     private Long artist_id;
 
-    @Column(name = "album_id")
-    private Long albumId;
+    @Column(name = "album_url")
+    private String albumUrl;
 
     @Override
     public int hashCode() {

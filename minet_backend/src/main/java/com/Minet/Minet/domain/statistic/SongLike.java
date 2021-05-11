@@ -21,8 +21,8 @@ public class SongLike {
     @ManyToOne(fetch = LAZY)
     @JoinColumns({
             @JoinColumn(name = "artist_id"),
-            @JoinColumn(name = "album_id"),
-            @JoinColumn(name = "song_id")
+            @JoinColumn(name = "album_url"),
+            @JoinColumn(name = "song_url")
     })
 
     private Song song;

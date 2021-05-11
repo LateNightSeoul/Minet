@@ -16,8 +16,8 @@ public class AlbumChildId implements Serializable {
 
     private ArtistChildId artistChildId;
 
-    @Column(name = "song_id")
-    private Long id;
+    @Column(name = "song_url")
+    private String songUrl;
 
     @Override
     public int hashCode() {

@@ -26,7 +26,7 @@ public class Song {
     @ManyToOne(fetch = LAZY)
     @JoinColumns({
             @JoinColumn(name = "artist_id", referencedColumnName = "artist_id"),
-            @JoinColumn(name = "album_id", referencedColumnName = "album_id")
+            @JoinColumn(name = "album_url", referencedColumnName = "album_url")
     })
     private Album album;
 
@@ -35,8 +35,6 @@ public class Song {
     private String photoUrl;
 
     private String songName;
-
-    private String songUrl;
 
     private String downloadUri;
 

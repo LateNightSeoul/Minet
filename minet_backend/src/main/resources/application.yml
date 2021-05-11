@@ -10,13 +10,10 @@ spring:
       file-size-threshold: 2KB
       max-file-size: 200MB
       max-request-size: 220MB
-file:
-  path: /minet-files
-
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
 #        show_sql: true
@@ -30,3 +27,6 @@ jwt:
   header: Authorization
   secret: bGF0ZW5pZ2h0aXNmdWNrZWR1cGJ1dGxhdGVuaWdodGNvZGluZ2lzIE5PVyBSSVNJTkcgaGFoYWhhaGEharegWGRsgsrgsrgsSsgq
   token-validity-in-seconds: 86400
+
+file:
+  path: /minet-files

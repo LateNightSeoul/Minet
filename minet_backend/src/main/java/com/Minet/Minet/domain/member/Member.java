@@ -24,7 +24,7 @@ public class Member {
 
     private String password;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "member")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.ALL)
     private Artist artist;
 
     private String phone;
