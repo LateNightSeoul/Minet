@@ -3,6 +3,7 @@ package com.Minet.Minet.domain.music;
 import com.Minet.Minet.domain.enumTypes.Genre;
 import com.Minet.Minet.domain.member.Artist;
 import com.Minet.Minet.domain.music.ids.ArtistChildId;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -33,6 +34,7 @@ public class Album {
     private String albumName;
 
     @OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Song> songs = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
