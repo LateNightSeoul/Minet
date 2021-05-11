@@ -56,6 +56,7 @@ public class FileController {
 
             String songPath = fileService.saveFile(uploadSong, principal, uploadSongDto);
 
+
             String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/file/download/")
                     .path(songPath).toUriString();
 

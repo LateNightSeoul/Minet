@@ -13,7 +13,6 @@ import com.Minet.Minet.repository.AlbumRepository;
 import com.Minet.Minet.repository.ArtistRepository;
 import com.Minet.Minet.repository.MemberRepository;
 import com.Minet.Minet.repository.SongRepository;
-import com.Minet.Minet.security.Authority;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
@@ -23,18 +22,14 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class FileService {
@@ -81,9 +76,11 @@ public class FileService {
 
         Path targetPath = this.fileStorageLocation.resolve(StringUtils.cleanPath(artistName + "/" + albumName + "/" + file.getOriginalFilename()));
 
-        if(!Files.exists(targetPath)) {
-            Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
+        if(Files.exists(targetPath)) {
+            throw new FileStorageException("중복된 파일 이름 입니다.");
         }
+        Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
+
         return targetPath.toString();
     }
 
@@ -119,6 +116,8 @@ public class FileService {
                 .releaseDate(uploadSongDto.getReleaseDate())
                 .photoUrl(imagePath)
                 .build();
+
+        albumRepository.save(album);
 
         Song song = Song.builder()
                 .songName(uploadSongDto.getSongName())
