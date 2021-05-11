@@ -36,6 +36,8 @@ public class AuthService {
             throw new RuntimeException("이미 가입된 id입니다.");
         }
 
+        System.out.println(joinDto.getAuthority());
+
         Member member = Member.builder()
                 .username(joinDto.getUsername())
                 .userid(joinDto.getUserid())

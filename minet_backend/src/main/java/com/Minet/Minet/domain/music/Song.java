@@ -32,8 +32,6 @@ public class Song {
 
     private Genre genre;
 
-    private String photoUrl;
-
     private String songName;
 
     private String downloadUri;

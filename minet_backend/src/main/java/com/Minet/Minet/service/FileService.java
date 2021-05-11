@@ -1,9 +1,11 @@
 package com.Minet.Minet.service;
 
+import com.Minet.Minet.domain.enumTypes.Genre;
 import com.Minet.Minet.domain.member.Artist;
 import com.Minet.Minet.domain.member.Member;
 import com.Minet.Minet.domain.music.Album;
 import com.Minet.Minet.domain.music.Song;
+import com.Minet.Minet.domain.music.ids.AlbumChildId;
 import com.Minet.Minet.domain.music.ids.ArtistChildId;
 import com.Minet.Minet.dto.file.UploadSongDto;
 import com.Minet.Minet.exception.FileStorageException;
@@ -27,7 +29,12 @@ import java.nio.file.*;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class FileService {
@@ -54,79 +61,75 @@ public class FileService {
     }
 
     public UploadSongDto getSongDto(JSONObject jsonObject) throws JSONException {
+
         UploadSongDto uploadSongDto = new UploadSongDto();
         uploadSongDto.setSongName(jsonObject.getString("songName"));
         uploadSongDto.setAlbumName(jsonObject.getString("albumName"));
         uploadSongDto.setArtist(jsonObject.getString("artist"));
-        uploadSongDto.setGenre(jsonObject.getString("genre"));
-        uploadSongDto.setReleaseDate((LocalDate) jsonObject.get("releaseDate"));
+        uploadSongDto.setGenre(Genre.fromString(jsonObject.getString("genre")));
+        uploadSongDto.setReleaseDate(LocalDate.parse(jsonObject.getString("releaseDate"), DateTimeFormatter.ISO_DATE));
 
         return uploadSongDto;
     }
 
-    public String saveSong(MultipartFile file, Principal principal, UploadSongDto uploadSongDto) throws FileStorageException, IOException{
+    @Transactional
+    public String saveFile(MultipartFile file, Principal principal, UploadSongDto uploadSongDto) throws FileStorageException, IOException{
         String artistName = uploadSongDto.getArtist();
-        String fileName = StringUtils.cleanPath(artistName + "/" + uploadSongDto.getAlbumName() + "/" + file.getOriginalFilename());
+        String albumName = uploadSongDto.getAlbumName();
 
-        makedir(artistName, uploadSongDto.getAlbumName());
+        makedir(Arrays.asList(artistName, albumName));
 
-        Path targetPath = this.fileStorageLocation.resolve(fileName);
+        Path targetPath = this.fileStorageLocation.resolve(StringUtils.cleanPath(artistName + "/" + albumName + "/" + file.getOriginalFilename()));
 
-        if(Files.exists(targetPath)) {
-            throw new FileStorageException("중복되는 파일명 입니다.");
+        if(!Files.exists(targetPath)) {
+            Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
         }
-
-        Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
-
-        return fileName;
+        return targetPath.toString();
     }
 
-    public void makedir(String artistName, String albumName) throws IOException {
-        String dirPath = StringUtils.cleanPath(artistName + "/" + albumName);
+    public void makedir(List<String> folderNames) throws IOException {
+        String dirPath = "";
+        for(String folderName : folderNames) {
+            dirPath += StringUtils.cleanPath(folderName + "/");
+            Path targetFolder = this.fileStorageLocation.resolve(dirPath);
 
-        Path targetFolder = this.fileStorageLocation.resolve(dirPath);
-
-        if(!Files.exists(targetFolder)) {
-            Files.createDirectory(targetFolder);
+            if(!Files.exists(targetFolder)) {
+                Files.createDirectory(targetFolder);
+            }
         }
     }
-
-    
-
-    public boolean isArtist(String userId) {
-        Optional<Member> member = memberRepository.findOneByUserid(userId);
-        if(member.get().getAuthority() == Authority.ROLE_ARTIST) {
-            return true;
-        }
-        return false;
-    }
-
-
 
     @Transactional
-    public Song saveSongInfo(MultipartFile uploadFile, Principal principal,
-                             String fileName, String fileDownloadUri) {
+    public Song saveSongInfo(MultipartFile uploadFile, Principal principal, String filePath,
+                             String imagePath, String fileDownloadUri, UploadSongDto uploadSongDto) {
+        Member currentUser = memberRepository.findOneByUserid(principal.getName()).get();
+        Artist artist = currentUser.getArtist();
 
-        Member member = memberRepository.findOneByUserid(principal.getName()).get();
-        Artist findArtist = member.getArtist();
-        Album album = new Album();
-        ArtistChildId artistChildId = new ArtistChildId(findArtist.getId(), "안녕");
-        album.setArtist(findArtist);
-        album.setArtistChildId(artistChildId);
-        Album saveAlbum = albumRepository.save(album);
+        String albumUrl = filePath.substring(filePath.lastIndexOf("/") + 1);
 
-        System.out.println("***********************************************");
+        ArtistChildId artistChildId = new ArtistChildId(artist.getId(), albumUrl);
 
-        Song song = Song.builder()
-                .album(album)
-                .createTime(LocalDateTime.now())
-                .fileType(uploadFile.getContentType())
-                .downloadUri(fileDownloadUri)
-                .photoUrl(null)
-                .size(uploadFile.getSize())
+        AlbumChildId albumChildId = new AlbumChildId(artistChildId, filePath);
+
+        Album album = Album.builder()
+                .albumName(uploadSongDto.getAlbumName())
+                .artist(artist)
+                .artistChildId(artistChildId)
+                .genre(uploadSongDto.getGenre())
+                .releaseDate(uploadSongDto.getReleaseDate())
+                .photoUrl(imagePath)
                 .build();
 
-        System.out.println(" **********************" + song.getAlbum().getArtist().getId() + "++++++++" );
+        Song song = Song.builder()
+                .songName(uploadSongDto.getSongName())
+                .fileType(uploadFile.getContentType())
+                .createTime(LocalDateTime.now())
+                .downloadUri(fileDownloadUri)
+                .genre(uploadSongDto.getGenre())
+                .albumChildId(albumChildId)
+                .size(uploadFile.getSize())
+                .album(album)
+                .build();
 
         return songRepository.save(song);
     }

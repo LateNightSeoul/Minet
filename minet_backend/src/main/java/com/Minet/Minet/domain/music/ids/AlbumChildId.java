@@ -12,6 +12,8 @@ import java.io.Serializable;
 
 @Embeddable
 @Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class AlbumChildId implements Serializable {
 
     private ArtistChildId artistChildId;

@@ -3,19 +3,19 @@ package com.Minet.Minet.domain.music;
 import com.Minet.Minet.domain.enumTypes.Genre;
 import com.Minet.Minet.domain.member.Artist;
 import com.Minet.Minet.domain.music.ids.ArtistChildId;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static javax.persistence.FetchType.*;
 
 @Entity
 @Getter @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Album {
@@ -31,6 +31,9 @@ public class Album {
     private LocalDate releaseDate;
 
     private String albumName;
+
+    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
+    private List<Song> songs = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private Genre genre;

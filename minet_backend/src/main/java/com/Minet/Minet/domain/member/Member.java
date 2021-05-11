@@ -33,6 +33,7 @@ public class Member {
 
     private LocalDateTime createTime;
 
+    @Enumerated(EnumType.STRING)
     private Authority authority;
 
 }

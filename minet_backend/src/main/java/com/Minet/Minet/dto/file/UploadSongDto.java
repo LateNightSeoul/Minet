@@ -17,7 +17,8 @@ public class UploadSongDto {
 
     private String artist;
 
-    private String genre;
+    private Genre genre;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate releaseDate;
 }
