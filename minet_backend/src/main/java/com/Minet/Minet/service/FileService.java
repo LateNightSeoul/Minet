@@ -68,7 +68,7 @@ public class FileService {
     }
 
     @Transactional
-    public String saveFile(MultipartFile file, Principal principal, UploadSongDto uploadSongDto) throws FileStorageException, IOException{
+    public String saveFile(MultipartFile file, UploadSongDto uploadSongDto) throws FileStorageException, IOException{
         String artistName = uploadSongDto.getArtist();
         String albumName = uploadSongDto.getAlbumName();
 
@@ -85,10 +85,10 @@ public class FileService {
     }
 
     public void makedir(List<String> folderNames) throws IOException {
-        String dirPath = "";
+        StringBuilder dirPath = new StringBuilder("");
         for(String folderName : folderNames) {
-            dirPath += StringUtils.cleanPath(folderName + "/");
-            Path targetFolder = this.fileStorageLocation.resolve(dirPath);
+            dirPath.append(StringUtils.cleanPath(folderName + "/"));
+            Path targetFolder = this.fileStorageLocation.resolve(String.valueOf(dirPath));
 
             if(!Files.exists(targetFolder)) {
                 Files.createDirectory(targetFolder);
@@ -114,7 +114,7 @@ public class FileService {
                 .artistChildId(artistChildId)
                 .genre(uploadSongDto.getGenre())
                 .releaseDate(uploadSongDto.getReleaseDate())
-                .photoUrl(imagePath)
+                .photoUrl((imagePath != "") ? imagePath : null)
                 .build();
 
         albumRepository.save(album);
