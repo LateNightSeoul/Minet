@@ -16,10 +16,10 @@ import java.nio.file.AccessDeniedException;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(FileStorageException.class)
-    public ExceptionResponse fileStorage(FileStorageException e) {
+    public ResponseEntity<ExceptionResponse> fileStorage(FileStorageException e) {
         ExceptionResponse exceptionResponse = new ExceptionResponse();
         exceptionResponse.setMessage(e.getMessage());
-        return exceptionResponse;
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
@@ -36,11 +36,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return exceptionResponse;
     }
 
-    @ExceptionHandler(Exception.class)
-    public ExceptionResponse exception(Exception e) {
-        e.printStackTrace();
-        ExceptionResponse exceptionResponse = new ExceptionResponse();
-        exceptionResponse.setMessage(e.getMessage());
-        return exceptionResponse;
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ExceptionResponse exception(Exception e) {
+//        e.printStackTrace();
+//        ExceptionResponse exceptionResponse = new ExceptionResponse();
+//        exceptionResponse.setMessage(e.getMessage());
+//        return exceptionResponse;
+//    }
 }

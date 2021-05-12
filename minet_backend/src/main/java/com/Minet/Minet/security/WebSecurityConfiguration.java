@@ -59,6 +59,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/join").permitAll()
                 .antMatchers("/login").permitAll()
                 .antMatchers("file/upload/song").permitAll()
+                .antMatchers("file/upload/album").permitAll()
                 .anyRequest().authenticated()
 
                 .and()

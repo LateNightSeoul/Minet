@@ -74,14 +74,30 @@ public class FileController {
 
     }
 
+    @PostMapping("/upload/album")
     public List<UploadSongResponse> uploadAlbum(@RequestParam("files") MultipartFile[] files,
                                                 @RequestParam("infos") String[] infos,
-                                                @RequestParam("image") MultipartFile[] image,
+                                                @RequestParam("image") MultipartFile[] images,
                                                 Principal principal) {
+        int NUMBER_OF_PARAMETER = 3;
+
         List<UploadSongResponse> responses = new ArrayList<>();
 
         for (int i = 0; i < files.length; i++) {
-            responses.add((uploadSong(files[i], infos[i], image[i], principal)));
+            MultipartFile file = null;
+            String info = null;
+            MultipartFile image = null;
+
+            for (int j = 0; j < NUMBER_OF_PARAMETER; j++) {
+                if(!files[i].isEmpty()) {
+                    file = files[i];
+                } else if (!infos[i].isEmpty()) {
+                    info = infos[i];
+                } else if (!images[i].isEmpty()) {
+                    image = images[i];
+                }
+            }
+            responses.add((uploadSong(file, info, image, principal)));
         }
         return responses;
     }
