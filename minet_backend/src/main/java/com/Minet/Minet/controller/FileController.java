@@ -25,9 +25,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.io.IOException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.swing.filechooser.FileSystemView;
+import java.io.*;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.file.AccessDeniedException;
 import java.security.Principal;
 import java.time.LocalDate;
@@ -99,5 +106,80 @@ public class FileController {
             e.printStackTrace();
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+
+    @GetMapping("/music/download")
+    @ResponseStatus(HttpStatus.OK)
+    public void downloadMusic(@RequestParam("songUrl") String songUrl,
+                        HttpServletRequest request,
+                        HttpServletResponse response) throws IOException {
+
+        String mp3Path = songUrl;
+
+        File filePath = new File(URLDecoder.decode(mp3Path, "UTF-8"));
+        
+        Long startRange = 0L;
+        Long endRange = filePath.length();
+
+        try(RandomAccessFile randomAccessFile = new RandomAccessFile(filePath, "r");
+            ServletOutputStream sos = response.getOutputStream();){
+
+            Integer bufferSize = 1024, data = 0;
+            byte[] b = new byte[bufferSize];
+            Long count = startRange;
+
+            randomAccessFile.seek(startRange);
+
+            while(true) {
+                data = randomAccessFile.read(b, 0, b.length);
+
+                if(count <= endRange) {
+                    sos.write(b, 0, data);
+                    count += bufferSize;
+                    randomAccessFile.seek(count);
+                } else {
+                    break;
+                }
+            }
+            sos.flush();
+        }
+    }
+
+    @GetMapping("/image/download")
+    public void downloadImage(@RequestParam("photoUrl") String photoUrl, HttpServletRequest request,
+                              HttpServletResponse response) throws UnsupportedEncodingException {
+
+        File filePath = new File(URLDecoder.decode(photoUrl, "UTF-8"));
+
+        Long startRange = 0L;
+        Long endRange = filePath.length();
+
+        try(RandomAccessFile randomAccessFile = new RandomAccessFile(filePath, "r");
+            ServletOutputStream sos = response.getOutputStream();){
+
+            Integer bufferSize = 1024, data = 0;
+            byte[] b = new byte[bufferSize];
+            Long count = startRange;
+
+            randomAccessFile.seek(startRange);
+
+            while(true) {
+                data = randomAccessFile.read(b, 0, b.length);
+
+                if(count <= endRange) {
+                    sos.write(b, 0, data);
+                    count += bufferSize;
+                    randomAccessFile.seek(count);
+                } else {
+                    break;
+                }
+            }
+            sos.flush();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
