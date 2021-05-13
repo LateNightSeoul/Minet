@@ -32,6 +32,8 @@ public class Song {
 
     private Genre genre;
 
+    private int songNumber;
+
     private String songName;
 
     private String fileType;

@@ -86,7 +86,7 @@ public class FileService {
 
     public Album saveAlbumInfo(Member currentUser, UploadSongInfoDto songInfo, String imagePath) {
         Artist userArtist = currentUser.getArtist();
-        String albumUrl = imagePath.substring(imagePath.lastIndexOf("/") + 1);
+        String albumUrl = imagePath.substring(0, StringUtils.cleanPath(imagePath).lastIndexOf("/") + 1);
 
         ArtistChildId artistChildId = new ArtistChildId(userArtist.getId(), albumUrl);
 
@@ -114,6 +114,7 @@ public class FileService {
                 .albumChildId(albumChildId)
                 .size(uploadFile.getSize())
                 .album(albumSaved)
+                .songNumber(songInfo.getSongNumber())
                 .build();
 
         return songRepository.save(song);
