@@ -20,28 +20,18 @@ import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.filechooser.FileSystemView;
 import java.io.*;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.nio.file.AccessDeniedException;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -118,7 +108,7 @@ public class FileController {
         String mp3Path = songUrl;
 
         File filePath = new File(URLDecoder.decode(mp3Path, "UTF-8"));
-        
+
         Long startRange = 0L;
         Long endRange = filePath.length();
 
