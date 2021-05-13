@@ -1,15 +1,20 @@
 package com.Minet.Minet.dto.file;
 
 import com.Minet.Minet.domain.enumTypes.Genre;
-import com.Minet.Minet.domain.member.Artist;
-import com.Minet.Minet.domain.music.Album;
-import lombok.Data;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
-public class UploadSongDto {
+@Builder
+public class UploadSongInfoDto {
+
+    private int songNumber;
+
+    private String fileName;
 
     private String songName;
 

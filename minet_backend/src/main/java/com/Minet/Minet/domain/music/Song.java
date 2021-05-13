@@ -34,8 +34,6 @@ public class Song {
 
     private String songName;
 
-    private String downloadUri;
-
     private String fileType;
 
     private Long size;

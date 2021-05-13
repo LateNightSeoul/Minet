@@ -14,11 +14,5 @@ public class UploadSongResponse {
 
     private String message;
 
-    private String fileName;
-
-    private String fileType;
-
-    private long size;
-
-    private Song song;
+    private String albumName;
 }
