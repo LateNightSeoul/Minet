@@ -7,6 +7,7 @@ import com.Minet.Minet.domain.music.Song;
 import com.Minet.Minet.dto.file.UploadAlbumDto;
 import com.Minet.Minet.dto.file.UploadSongInfoDto;
 import com.Minet.Minet.dto.file.UploadSongInfoWrapperDto;
+import com.Minet.Minet.es.SongESService;
 import com.Minet.Minet.exception.FileStorageException;
 import com.Minet.Minet.repository.MemberRepository;
 import com.Minet.Minet.repository.SongRepository;
@@ -47,6 +48,9 @@ public class FileController {
     @Autowired
     MemberService memberService;
 
+    @Autowired
+    SongESService songESService;
+
 
     @SneakyThrows
     @PostMapping("/upload/album")
@@ -85,6 +89,7 @@ public class FileController {
                     if(songInfo.getFileName().equals(song.getOriginalFilename())) {
                         String songPath = fileService.saveFile(song, dirPath);
                         fileService.saveSongInfo(albumSaved, currentUser, songInfo, songPath, song);
+                        songESService.save(dirPath, songPath, imagePath, songInfo);
                     }
                 }
             }
