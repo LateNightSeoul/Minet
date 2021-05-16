@@ -105,9 +105,7 @@ public class FileController {
                         HttpServletRequest request,
                         HttpServletResponse response) throws IOException {
 
-        String mp3Path = songUrl;
-
-        File filePath = new File(URLDecoder.decode(mp3Path, "UTF-8"));
+        File filePath = new File(URLDecoder.decode(songUrl, "UTF-8"));
 
         Long startRange = 0L;
         Long endRange = filePath.length();
