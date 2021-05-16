@@ -14,7 +14,7 @@ import javax.annotation.Resource;
 @SpringBootTest
 public class elasticRepositoryTest {
 
-    @Resource
+    @Autowired
     SongESRepository songESRepository;
 
     @Test

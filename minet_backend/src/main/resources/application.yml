@@ -19,6 +19,7 @@ spring:
 #        show_sql: true
         format_sql: true
 
+
 logging:
   level:
     org.hibernate.SQL: debug
@@ -30,7 +31,3 @@ jwt:
 
 file:
   path: /minet-files
-
-es:
-  host: 127.0.0.1
-  port: 9300
