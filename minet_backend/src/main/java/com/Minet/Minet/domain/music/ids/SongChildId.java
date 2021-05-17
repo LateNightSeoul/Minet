@@ -1,13 +1,20 @@
 package com.Minet.Minet.domain.music.ids;
 
 import com.Minet.Minet.domain.music.Song;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import javax.persistence.Embeddable;
 import java.io.Serializable;
 
+@Embeddable
+@Getter
+@Setter
 public class SongChildId implements Serializable {
 
-    private Song song;
-//    private Long id;
+    private AlbumChildId albumChildId;
 
     @Override
     public int hashCode() {

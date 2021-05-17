@@ -3,38 +3,42 @@ package com.Minet.Minet.domain.music;
 import com.Minet.Minet.domain.enumTypes.Genre;
 import com.Minet.Minet.domain.member.Artist;
 import com.Minet.Minet.domain.music.ids.ArtistChildId;
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static javax.persistence.FetchType.*;
 
 @Entity
 @Getter @Setter
-@IdClass(ArtistChildId.class)
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Album {
 
-    @Id @GeneratedValue
-    @Column(name = "album_id")
-    private Long id;
+    @EmbeddedId
+    private ArtistChildId artistChildId;
 
-    @Id
+    @MapsId("artist_id")
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "artist_id")
+    @JoinColumn(name = "artist_id", referencedColumnName = "artist_id")
     private Artist artist;
+
+    private LocalDate releaseDate;
 
     private String albumName;
 
-    private LocalDate releaseDate;
+    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Song> songs = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private Genre genre;
 
     private String photoUrl;
-
-
-
 }

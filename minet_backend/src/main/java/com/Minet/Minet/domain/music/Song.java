@@ -2,35 +2,47 @@ package com.Minet.Minet.domain.music;
 
 import com.Minet.Minet.domain.enumTypes.Genre;
 import com.Minet.Minet.domain.music.ids.AlbumChildId;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+
+import java.time.LocalDateTime;
 
 import static javax.persistence.FetchType.*;
 
 @Entity
 @Getter @Setter
-@IdClass(AlbumChildId.class)
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Song {
 
-    @Id @GeneratedValue
-    @Column(name = "song_id")
-    private Long id;
+    @EmbeddedId
+    private AlbumChildId albumChildId;
 
-    @Id
+    @MapsId("artistChildId")
     @ManyToOne(fetch = LAZY)
     @JoinColumns({
             @JoinColumn(name = "artist_id", referencedColumnName = "artist_id"),
-            @JoinColumn(name = "album_id", referencedColumnName = "album_id")
+            @JoinColumn(name = "album_url", referencedColumnName = "album_url")
     })
     private Album album;
 
     private Genre genre;
 
+    private int songNumber;
+
     private String songName;
 
+    private String fileType;
 
+    private Long size;
 
+    @CreationTimestamp
+    private LocalDateTime createTime;
 
+    @UpdateTimestamp
+    private LocalDateTime updateTime;
 }

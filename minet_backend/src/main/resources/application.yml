@@ -4,7 +4,12 @@ spring:
     username: sa
     password:
     driver-class-name: org.h2.Driver
-
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2KB
+      max-file-size: 200MB
+      max-request-size: 220MB
 
   jpa:
     hibernate:
@@ -14,6 +19,7 @@ spring:
 #        show_sql: true
         format_sql: true
 
+
 logging:
   level:
     org.hibernate.SQL: debug
@@ -22,3 +28,6 @@ jwt:
   header: Authorization
   secret: bGF0ZW5pZ2h0aXNmdWNrZWR1cGJ1dGxhdGVuaWdodGNvZGluZ2lzIE5PVyBSSVNJTkcgaGFoYWhhaGEharegWGRsgsrgsrgsSsgq
   token-validity-in-seconds: 86400
+
+file:
+  path: /minet-files

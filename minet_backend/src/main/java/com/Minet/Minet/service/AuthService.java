@@ -32,9 +32,11 @@ public class AuthService {
 
     @Transactional
     public Member join(JoinDto joinDto) {
-        if(memberRepository.findOneByUserid(joinDto.getUserid()) != null) {
+        if(!memberRepository.findOneByUserid(joinDto.getUserid()).isEmpty()) {
             throw new RuntimeException("이미 가입된 id입니다.");
         }
+
+        System.out.println(joinDto.getAuthority());
 
         Member member = Member.builder()
                 .username(joinDto.getUsername())
@@ -43,7 +45,7 @@ public class AuthService {
                 .phone(joinDto.getPhone())
                 .enabled(true)
                 .createTime(LocalDateTime.now())
-                .role(joinDto.getAuthority())
+                .authority(joinDto.getAuthority())
                 .build();
 
         Member savedMember = memberRepository.save(member);

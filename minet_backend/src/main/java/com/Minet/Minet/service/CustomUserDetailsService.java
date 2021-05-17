@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component("userDetailsService")
 public class CustomUserDetailsService implements UserDetailsService {
@@ -26,17 +27,17 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String userid) throws UsernameNotFoundException {
-        Member member = memberRepository.findOneByUserid(userid);
-        if (member == null) {
+        Optional<Member> member = memberRepository.findOneByUserid(userid);
+        if (member.isEmpty()) {
             throw new UsernameNotFoundException("데이터베이스에서 찾을 수 없습니다.");
         }
-        User user = createUser(userid, member);
+        User user = createUser(userid, member.get());
         return user;
     }
 
     private User createUser(String username, Member member) {
         List<GrantedAuthority> grantedAuthority = new ArrayList<>();
-        grantedAuthority.add(new SimpleGrantedAuthority(member.getRole().toString()));
+        grantedAuthority.add(new SimpleGrantedAuthority(member.getAuthority().toString()));
 
         return new User(member.getUserid(), member.getPassword(), grantedAuthority);
     }

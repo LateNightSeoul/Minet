@@ -1,11 +1,27 @@
 package com.Minet.Minet.domain.music.ids;
 
+import com.Minet.Minet.domain.member.Artist;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.io.Serializable;
 
+@Embeddable
+@Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ArtistChildId implements Serializable {
 
-    private Long id;
-    private Long artist;
+    private Long artist_id;
+
+    @Column(name = "album_url")
+    private String albumUrl;
 
     @Override
     public int hashCode() {
