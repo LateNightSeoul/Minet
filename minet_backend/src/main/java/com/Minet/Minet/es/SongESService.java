@@ -12,9 +12,9 @@ public class SongESService {
     @Autowired
     SongESRepository songESRepository;
 
-    public Slice<Song> findAll(String search, PageRequest pageRequest) {
-        return songESRepository.findAllBySongNameAndArtistAndAlbumName(search, pageRequest);
-    }
+//    public Slice<Song> findAll(String search, PageRequest pageRequest) {
+//        return songESRepository.findAllByArtist(pageRequest);
+//    }
 
     public void save(String dirPath, String songPath, String imagePath, UploadSongInfoDto uploadSongInfoDto) {
         Song song = new Song();
