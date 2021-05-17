@@ -2,11 +2,10 @@ package com.Minet.Minet.es;
 
 import com.Minet.Minet.domain.enumTypes.Genre;
 import lombok.Data;
+import org.springframework.data.elasticsearch.annotations.DateFormat;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
-
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.time.LocalDate;
 
@@ -32,6 +31,7 @@ public class Song {
 
     private String imageUrl;
 
+    @Field(type = FieldType.Date, format = DateFormat.custom, pattern = "yyyy-MM-dd")
     private LocalDate releaseDate;
 
     private Genre genre;

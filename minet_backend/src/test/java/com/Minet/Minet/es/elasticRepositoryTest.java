@@ -1,28 +1,20 @@
 package com.Minet.Minet.es;
 
 import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.client.Client;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.h2.mvstore.Page;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Slice;
-import org.springframework.security.core.parameters.P;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
-import java.util.Arrays;
+import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -69,6 +61,14 @@ public class elasticRepositoryTest {
             SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
 
             System.out.println(searchResponse);
+
+            SearchHits searchHits = searchResponse.getHits();
+
+            for (SearchHit hit : searchHits) {
+                System.out.println("hit : " + hit.toString());
+                Map<String, Object> sourceAsMap = hit.getSourceAsMap();
+                System.out.println(sourceAsMap);
+            }
         }
     }
 }

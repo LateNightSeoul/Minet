@@ -62,6 +62,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("file/upload/album").permitAll()
                 .antMatchers("file/music/download").permitAll()
                 .antMatchers("file/image/download").permitAll()
+                .antMatchers("search/song").permitAll()
+                .antMatchers("search/song/recent").permitAll()
                 .anyRequest().authenticated()
 
                 .and()
