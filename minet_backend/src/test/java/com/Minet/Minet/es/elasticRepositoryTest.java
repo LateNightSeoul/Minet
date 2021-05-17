@@ -22,6 +22,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -46,6 +47,21 @@ public class elasticRepositoryTest {
         SearchRequest searchRequest = new SearchRequest();
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.query(QueryBuilders.matchAllQuery());
+        for(int i = 0; i < 5; i++) {
+            searchSourceBuilder.from(i);
+            searchSourceBuilder.size(1);
+            searchRequest.source(searchSourceBuilder);
+            SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+
+            System.out.println(searchResponse);
+        }
+    }
+
+    @Test
+    public void MultiMatchQuery() throws Exception {
+        SearchRequest searchRequest = new SearchRequest();
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.query(QueryBuilders.multiMatchQuery("late", "artist.ngram", "songName.ngram"));
         for(int i = 0; i < 5; i++) {
             searchSourceBuilder.from(i);
             searchSourceBuilder.size(1);
