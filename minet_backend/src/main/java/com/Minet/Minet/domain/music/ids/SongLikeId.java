@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class SongLikeId implements Serializable {
     private AlbumChildId albumChildId;
-    private LocalDateTime createTime;
+    private LocalDateTime createDate;
 
     @Override
     public int hashCode() {

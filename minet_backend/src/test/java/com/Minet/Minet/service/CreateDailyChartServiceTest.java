@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Random;
 
 @RunWith(SpringRunner.class)
@@ -52,16 +53,20 @@ public class CreateDailyChartServiceTest {
     @Test
     @Transactional
     @Rollback(false)
-    public void createChart() throws Exception {
+    public void testWhole() throws Exception {
+        createChartInsertData();
+        createChart();
+    }
+
+    @Test
+    @Transactional
+    @Rollback(false)
+    public void createChartInsertData() throws Exception {
         for (int i = 65; i < 91; i++) {
 
             Artist artist = new Artist();
             artist.setArtistName(("가수"));
             artistRepository.save(artist);
-
-            System.out.println(artist.getId());
-
-            System.out.println("fuck!!!!!!!!!!!!!");
 
             ArtistChildId artistChildId = new ArtistChildId(artist.getId(), String.valueOf(i));
             Album album = new Album();
@@ -124,9 +129,18 @@ public class CreateDailyChartServiceTest {
 
                 em.flush();
             }
-
-
-
         }
+    }
+
+    @Test
+    @Transactional
+    @Rollback(false)
+    public void createChart() throws Exception{
+        List resultList = em.createNativeQuery("SELECT COUNT(SL.ARTIST_ID), FROM SONG_LIKE AS SL " +
+                "WHERE FORMATDATETIME(SL.CREATE_DATE, 'yyyy-MM-dd') = FORMATDATETIME(:localdate, 'yyyy-MM-dd')")
+                .setParameter("localdate", LocalDateTime.now())
+                .getResultList();
+
+        System.out.println(resultList);
     }
 }
