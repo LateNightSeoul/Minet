@@ -136,11 +136,17 @@ public class CreateDailyChartServiceTest {
     @Transactional
     @Rollback(false)
     public void createChart() throws Exception{
-        List resultList = em.createNativeQuery("SELECT COUNT(SL.ARTIST_ID), FROM SONG_LIKE AS SL " +
+        List<Object[]> resultList = em.createNativeQuery("SELECT SL.ALBUM_URL, SL.ARTIST_ID FROM SONG_LIKE AS SL " +
                 "WHERE FORMATDATETIME(SL.CREATE_DATE, 'yyyy-MM-dd') = FORMATDATETIME(:localdate, 'yyyy-MM-dd')")
                 .setParameter("localdate", LocalDateTime.now())
-                .getResultList();
+                .getResultList()
+                ;
 
         System.out.println(resultList);
+        for(Object[] s : resultList) {
+            for(int i = 0; i < s.length; i++) {
+                System.out.println(s[i]);
+            }
+        }
     }
 }
