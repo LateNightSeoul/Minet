@@ -30,6 +30,6 @@ public class WeeklyVisited {
 
     private Long count;
 
-    private LocalDateTime date;
+    private LocalDateTime createDate;
 
 }

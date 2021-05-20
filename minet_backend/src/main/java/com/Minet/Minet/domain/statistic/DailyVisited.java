@@ -13,7 +13,7 @@ import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter @Setter
-public class Visited {
+public class DailyVisited {
     @EmbeddedId
     private SongChildId songChildId;
 
@@ -27,5 +27,7 @@ public class Visited {
     private Song song;
 
     private Long count;
+
+    private LocalDateTime createDate;
 
 }
