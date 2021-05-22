@@ -14,22 +14,22 @@ import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter @Setter
-public class WeeklyVisited {
+public class TotalVisited {
 
     @EmbeddedId
     private SongChildId songChildId;
 
     @MapsId("albumChildId")
-    @ManyToOne(fetch = LAZY)
+    @OneToOne(fetch = LAZY)
     @JoinColumns({
-            @JoinColumn(name="song_url"),
+            @JoinColumn(name = "artist_id"),
             @JoinColumn(name = "album_url"),
-            @JoinColumn(name = "artist_id")
+            @JoinColumn(name = "song_url"),
+
     })
     private Song song;
 
     private Long count;
 
     private LocalDateTime createDate;
-
 }
