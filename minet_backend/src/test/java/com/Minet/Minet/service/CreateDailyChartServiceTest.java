@@ -136,14 +136,28 @@ public class CreateDailyChartServiceTest {
     @Transactional
     @Rollback(false)
     public void createChart() throws Exception{
-        List<Object[]> resultList = em.createNativeQuery("SELECT SL.ALBUM_URL, SL.ARTIST_ID FROM SONG_LIKE AS SL " +
-                "WHERE FORMATDATETIME(SL.CREATE_DATE, 'yyyy-MM-dd') = FORMATDATETIME(:localdate, 'yyyy-MM-dd')")
-                .setParameter("localdate", LocalDateTime.now())
-                .getResultList()
-                ;
+        List<Object[]> songLike_yesterday = em.createNativeQuery("SELECT SL.SONG_URL, COUNT(SL.SONG_URL) FROM SONG_LIKE AS SL " +
+                "WHERE FORMATDATETIME(SL.CREATE_DATE, 'yyyy-MM-dd') = FORMATDATETIME(:localdate, 'yyyy-MM-dd') GROUP BY SL.SONG_URL" )
+                .setParameter("localdate", LocalDateTime.now().minusDays(1))
+                .getResultList();
 
-        System.out.println(resultList);
-        for(Object[] s : resultList) {
+        List<Object[]> songLike_today = em.createNativeQuery("SELECT SL.SONG_URL, COUNT(SL.SONG_URL) FROM SONG_LIKE AS SL " +
+                "WHERE FORMATDATETIME(SL.CREATE_DATE, 'yyyy-MM-dd') = FORMATDATETIME(:localdate, 'yyyy-MM-dd') GROUP BY SL.SONG_URL")
+                .setParameter("localdate", LocalDateTime.now())
+                .getResultList();
+
+        List<Object[]> visited_yesterday = em.createNativeQuery("SELECT DV.SONG_URL, DV.COUNT FROM DAILY_VISITED AS DV " +
+                "WHERE FORMATDATETIME(DV.CREATE_DATE, 'yyyy-MM-dd') = FORMATDATETIME(:localdate, 'yyyy-MM-dd')")
+                .setParameter("localdate", LocalDateTime.now().minusDays(1))
+                .getResultList();
+
+        List<Object[]> visited_today = em.createNativeQuery("SELECT DV.SONG_URL, DV.COUNT FROM DAILY_VISITED AS DV " +
+                "WHERE FORMATDATETIME(DV.CREATE_DATE, 'yyyy-MM-dd') = FORMATDATETIME(:localdate, 'yyyy-MM-dd')")
+                .setParameter("localdate", LocalDateTime.now())
+                .getResultList();
+
+        System.out.println(songLike_yesterday);
+        for(Object[] s : songLike_yesterday) {
             for(int i = 0; i < s.length; i++) {
                 System.out.println(s[i]);
             }
