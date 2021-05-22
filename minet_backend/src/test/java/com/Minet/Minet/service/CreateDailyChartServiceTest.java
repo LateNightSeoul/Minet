@@ -65,6 +65,8 @@ public class CreateDailyChartServiceTest {
     public void createChartInsertData() throws Exception {
         for (int i = 65; i < 91; i++) {
 
+            Random random = new Random();
+
             Artist artist = new Artist();
             artist.setArtistName(("가수"));
             artistRepository.save(artist);
@@ -88,28 +90,21 @@ public class CreateDailyChartServiceTest {
                     .songNumber(1)
                     .build();
             songRepository.save(song);
-
             em.flush();
 
-            SongChildId songChildId = new SongChildId(albumChildId);
-            Random random = new Random();
+            SongLikeId sli1 = new SongLikeId(albumChildId, LocalDateTime.now().minusSeconds(random.nextInt(10000)));
+            SongLikeId sli2 = new SongLikeId(albumChildId, LocalDateTime.now().minusDays(1).minusSeconds(random.nextInt(10000)));
 
             DailyVisited dailyVisited = new DailyVisited();
-
             dailyVisited.setCount((long) random.nextInt(10000));
-            dailyVisited.setSongChildId(songChildId);
+            dailyVisited.setSongLikeId(sli1);
             dailyVisited.setSong(song);
-            dailyVisited.setCreateDate(LocalDateTime.now());
-
             dailyVisitedRepository.save(dailyVisited);
 
             DailyVisited dailyVisited2 = new DailyVisited();
-
             dailyVisited2.setCount((long) random.nextInt(10000));
-            dailyVisited2.setSongChildId(songChildId);
+            dailyVisited2.setSongLikeId(sli2);
             dailyVisited2.setSong(song);
-            dailyVisited2.setCreateDate(LocalDateTime.now().minusDays(1));
-
             dailyVisitedRepository.save(dailyVisited2);
 
             int upperInt = random.nextInt(100);
@@ -165,7 +160,7 @@ public class CreateDailyChartServiceTest {
                 .getResultList();
 
         System.out.println(songLike_yesterday);
-        for(Object[] s : songLike_yesterday) {
+        for(Object[] s : visited_today) {
             for(int i = 0; i < s.length; i++) {
                 System.out.println(s[i]);
             }
