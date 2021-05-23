@@ -1,9 +1,12 @@
 package com.Minet.Minet.service;
 
+import com.Minet.Minet.domain.enumTypes.ChartType;
 import com.Minet.Minet.domain.enumTypes.Genre;
 import com.Minet.Minet.domain.member.Artist;
 import com.Minet.Minet.domain.member.Member;
 import com.Minet.Minet.domain.music.Album;
+import com.Minet.Minet.domain.music.Chart;
+import com.Minet.Minet.domain.music.ChartSong;
 import com.Minet.Minet.domain.music.Song;
 import com.Minet.Minet.domain.music.ids.AlbumChildId;
 import com.Minet.Minet.domain.music.ids.ArtistChildId;
@@ -23,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.math.BigInteger;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -52,6 +56,12 @@ public class CreateDailyChartServiceTest {
     SongLikeRepository songLikeRepository;
 
     @Autowired
+    ChartRepository chartRepository;
+
+    @Autowired
+    ChartSongRepository chartSongRepository;
+
+    @Autowired
     EntityManager em;
 
     @Test
@@ -66,7 +76,7 @@ public class CreateDailyChartServiceTest {
     @Transactional
     @Rollback(false)
     public void createChartInsertData() throws Exception {
-        for (int i = 65; i < 91; i++) {
+        for (int i = 0; i < 25; i++) {
 
             Random random = new Random();
 
@@ -74,14 +84,14 @@ public class CreateDailyChartServiceTest {
             artist.setArtistName(("가수"));
             artistRepository.save(artist);
 
-            ArtistChildId artistChildId = new ArtistChildId(artist.getId(), String.valueOf(i));
+            ArtistChildId artistChildId = new ArtistChildId(artist.getId(), "/path/album");
             Album album = new Album();
             album.setArtistChildId(artistChildId);
             album.setArtist(artist);
             album.setAlbumName(("album" + i));
             albumRepository.save(album);
 
-            AlbumChildId albumChildId = new AlbumChildId(artistChildId, String.valueOf(i + 10000));
+            AlbumChildId albumChildId = new AlbumChildId(artistChildId, String.valueOf("/path" + i + 10000));
             Song song = Song.builder()
                     .songName(String.valueOf(i))
                     .fileType((String.valueOf(i) + ".mp3"))
@@ -150,6 +160,8 @@ public class CreateDailyChartServiceTest {
                 em.flush();
             }
         }
+
+
     }
 
     @Test
@@ -188,33 +200,30 @@ public class CreateDailyChartServiceTest {
     @Transactional
     @Rollback(false)
     public void testSubQuery() {
-        List<Object[]> songLike = em.createNativeQuery("SELECT S1.SONG_URL, (S1.CNT - S2.CNT) AS LIKE_INC, (SELECT COUNT(TL.SONG_URL) FROM SONG_LIKE TL WHERE TL.SONG_URL = S1.SONG_URL) AS TOTAL_CNT " +
-                "FROM (SELECT SL.SONG_URL, COUNT(SL.SONG_URL) AS CNT FROM SONG_LIKE SL WHERE FORMATDATETIME(SL.CREATE_DATE, 'yyyy-MM-dd') = FORMATDATETIME(:localdate1, 'yyyy-MM-dd') GROUP BY SL.SONG_URL) AS S1," +
+        List<Object[]> songLike = em.createNativeQuery("SELECT S1.SONG_URL, S1.ALBUM_URL, S1.ARTIST_ID, (S1.CNT - S2.CNT) AS LIKE_INC, (SELECT COUNT(TL.SONG_URL) FROM SONG_LIKE TL WHERE TL.SONG_URL = S1.SONG_URL) AS TOTAL_CNT " +
+                "FROM (SELECT SL.SONG_URL, SL.ALBUM_URL, SL.ARTIST_ID, COUNT(SL.SONG_URL) AS CNT FROM SONG_LIKE SL WHERE FORMATDATETIME(SL.CREATE_DATE, 'yyyy-MM-dd') = FORMATDATETIME(:localdate1, 'yyyy-MM-dd') GROUP BY SL.SONG_URL) AS S1," +
                 "(SELECT SL.SONG_URL, COUNT(SL.SONG_URL) AS CNT FROM SONG_LIKE SL WHERE FORMATDATETIME(SL.CREATE_DATE, 'yyyy-MM-dd') = FORMATDATETIME(:localdate2, 'yyyy-MM-dd') GROUP BY SL.SONG_URL) AS S2 " +
                 "WHERE S1.SONG_URL = S2.SONG_URL ORDER BY S1.SONG_URL ASC")
                 .setParameter("localdate1", LocalDateTime.now())
                 .setParameter("localdate2", LocalDateTime.now().minusDays(1))
                 .getResultList();
 
-        for(Object[] s : songLike) {
-            System.out.println("SONG_URL : " + s[0] + "  LIKE_INC : " + s[1] + " TOTAL : " + s[2]);
-        }
-
-        List<Object[]> visited = em.createNativeQuery("SELECT V1.SONG_URL, (V1.COUNT - V2.COUNT) AS CNT, (SELECT TV.COUNT FROM TOTAL_VISITED TV WHERE TV.SONG_URL = V1.SONG_URL) AS TOTAL_CNT " +
-                "FROM (SELECT DV.SONG_URL, DV.COUNT FROM DAILY_VISITED AS DV WHERE FORMATDATETIME(DV.CREATE_DATE, 'yyyy-MM-dd') = FORMATDATETIME(:localdate1, 'yyyy-MM-dd') GROUP BY DV.SONG_URL) AS V1," +
+        List<Object[]> visited = em.createNativeQuery("SELECT V1.SONG_URL, V1.ALBUM_URL, V1.ARTIST_ID, (V1.COUNT - V2.COUNT) AS CNT, (SELECT TV.COUNT FROM TOTAL_VISITED TV WHERE TV.SONG_URL = V1.SONG_URL) AS TOTAL_CNT " +
+                "FROM (SELECT DV.SONG_URL, DV.ALBUM_URL, DV.ARTIST_ID, DV.COUNT FROM DAILY_VISITED AS DV WHERE FORMATDATETIME(DV.CREATE_DATE, 'yyyy-MM-dd') = FORMATDATETIME(:localdate1, 'yyyy-MM-dd') GROUP BY DV.SONG_URL) AS V1," +
                 "(SELECT DV.SONG_URL, DV.COUNT FROM DAILY_VISITED AS DV WHERE FORMATDATETIME(DV.CREATE_DATE, 'yyyy-MM-dd') = FORMATDATETIME(:localdate2, 'yyyy-MM-dd') GROUP BY DV.SONG_URL) AS V2 " +
                 "WHERE V1.SONG_URL = V2.SONG_URL ORDER BY V1.SONG_URL ASC")
                 .setParameter("localdate1", LocalDateTime.now())
                 .setParameter("localdate2", LocalDateTime.now().minusDays(1))
                 .getResultList();
 
-        System.out.println("***********************************************************");
 
-        for(Object[] a : visited) {
-            System.out.println("Song_URL : " + a[0] + " CNT : " + a[1] + " TOTAL_VISITED : "  + a[2]);
+        for (Object[] s : songLike) {
+            for(int i = 0; i < s.length; i++) {
+                System.out.println(s[i]);
+            }
         }
 
-        HashMap<String, Long> scoreResultMap = new HashMap<>();
+        HashMap<List, Long> scoreResultMap = new HashMap<>();
 
         for (int i = 0; i < songLike.size(); i++) {
             for (int j = 0; j < visited.size(); j++) {
@@ -222,28 +231,59 @@ public class CreateDailyChartServiceTest {
                     Object[] sl = songLike.get(i);
                     Object[] vs = visited.get(i);
                     String song_url = (String) sl[0];
-                    long song_cnt = ((BigInteger)sl[1]).longValue();
-                    long total_song_cnt = ((BigInteger)sl[2]).longValue();
-                    long visited_cnt = ((BigInteger)vs[1]).longValue();
-                    long total_visited_cnt = ((BigInteger)vs[2]).longValue();
+                    String album_url = (String) sl[1];
+                    long artist_id = ((BigInteger)sl[2]).longValue();
+
+                    long song_cnt = ((BigInteger)sl[3]).longValue();
+                    long total_song_cnt = ((BigInteger)sl[4]).longValue();
+                    long visited_cnt = ((BigInteger)vs[3]).longValue();
+                    long total_visited_cnt = ((BigInteger)vs[4]).longValue();
                     long score = (long) ((song_cnt * 10 + visited_cnt) / Math.sqrt(total_song_cnt + total_visited_cnt + 1));
-                    scoreResultMap.put(song_url, score);
+                    scoreResultMap.put(Arrays.asList(artist_id, album_url, song_url), score);
                 }
             }
         }
 
-        List<Map.Entry<String, Long>> scoreResult = new ArrayList<>(scoreResultMap.entrySet());
+        List<Map.Entry<List, Long>> scoreResult = new ArrayList<>(scoreResultMap.entrySet());
 
-        Collections.sort(scoreResult, new Comparator<Map.Entry<String, Long>>() {
+
+        Collections.sort(scoreResult, new Comparator<Map.Entry<List, Long>>() {
             @Override
-            public int compare(Map.Entry<String, Long> o1, Map.Entry<String, Long> o2) {
+            public int compare(Map.Entry<List, Long> o1, Map.Entry<List, Long> o2) {
                 return o2.getValue().compareTo(o1.getValue());
             }
         });
 
-
         System.out.println(scoreResult);
 
+        // Service 기능 구현
 
+        Chart risingChart = new Chart();
+        risingChart.setChartDate(LocalDate.now());
+        risingChart.setChartType(ChartType.Rising);
+        risingChart.setCreateTime(LocalDateTime.now());
+        chartRepository.save(risingChart);
+
+        for(int i = 0; i < 100; i++) {
+            if (i >= scoreResult.size()) {
+                break;
+            }
+            List info_list = scoreResult.get(i).getKey();
+            ArtistChildId artistChildId = new ArtistChildId((Long) info_list.get(0), (String) info_list.get(1));
+            AlbumChildId albumChildId = new AlbumChildId(artistChildId, (String) info_list.get(2));
+            Song findSong = songRepository.findByAlbumChildId(albumChildId);
+
+            SongChildId songChildId = new SongChildId(albumChildId);
+
+            ChartSong chartSong = new ChartSong();
+            chartSong.setChart(risingChart);
+            chartSong.setSong(findSong);
+            chartSong.setSongChildId(songChildId);
+            chartSong.setSongName(findSong.getSongName());
+            chartSong.setGenre(findSong.getGenre());
+
+            chartSongRepository.save(chartSong);
+
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.Minet.Minet.domain.music;
 
+import com.Minet.Minet.domain.enumTypes.Genre;
 import com.Minet.Minet.domain.music.ids.SongChildId;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,5 +28,10 @@ public class ChartSong {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "chart_id")
     private Chart chart;
+
+    private String songName;
+
+    @Enumerated(EnumType.STRING)
+    private Genre genre;
 
 }

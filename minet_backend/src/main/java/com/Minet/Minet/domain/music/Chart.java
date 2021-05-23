@@ -5,10 +5,7 @@ import com.Minet.Minet.domain.enumTypes.ChartType;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -20,8 +17,10 @@ public class Chart {
     @Column(name = "chart_id")
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     private ChartType chartType;
 
+    @Enumerated(EnumType.STRING)
     private ChartGenre chartGenre;
 
     private LocalDate chartDate;
