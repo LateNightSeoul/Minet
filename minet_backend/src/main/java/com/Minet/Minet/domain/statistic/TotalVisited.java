@@ -22,8 +22,8 @@ public class TotalVisited {
     @MapsId("albumChildId")
     @OneToOne(fetch = LAZY)
     @JoinColumns({
-            @JoinColumn(name = "artist_id"),
             @JoinColumn(name = "album_url"),
+            @JoinColumn(name = "artist_id"),
             @JoinColumn(name = "song_url"),
 
     })
