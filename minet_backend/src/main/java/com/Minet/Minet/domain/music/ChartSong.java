@@ -31,6 +31,7 @@ public class ChartSong {
 
     private String songName;
 
+    @Enumerated(EnumType.STRING)
     private Genre genre;
 
 }
