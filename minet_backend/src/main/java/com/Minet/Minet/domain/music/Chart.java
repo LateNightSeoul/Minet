@@ -17,6 +17,7 @@ public class Chart {
     @Column(name = "chart_id")
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     private ChartType chartType;
 
     @Enumerated(EnumType.STRING)

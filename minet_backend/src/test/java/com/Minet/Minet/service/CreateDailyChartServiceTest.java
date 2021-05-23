@@ -56,6 +56,12 @@ public class CreateDailyChartServiceTest {
     SongLikeRepository songLikeRepository;
 
     @Autowired
+    ChartRepository chartRepository;
+
+    @Autowired
+    ChartSongRepository chartSongRepository;
+
+    @Autowired
     EntityManager em;
 
     @Test
@@ -256,19 +262,27 @@ public class CreateDailyChartServiceTest {
         risingChart.setChartDate(LocalDate.now());
         risingChart.setChartType(ChartType.Rising);
         risingChart.setCreateTime(LocalDateTime.now());
+        chartRepository.save(risingChart);
 
         for(int i = 0; i < 100; i++) {
             if (i >= scoreResult.size()) {
                 break;
             }
             List info_list = scoreResult.get(i).getKey();
-            ArtistChildId artistChildId = new ArtistChildId(Long.valueOf((String) info_list.get(0)), (String) info_list.get(1));
+            ArtistChildId artistChildId = new ArtistChildId((Long) info_list.get(0), (String) info_list.get(1));
             AlbumChildId albumChildId = new AlbumChildId(artistChildId, (String) info_list.get(2));
             Song findSong = songRepository.findByAlbumChildId(albumChildId);
 
+            SongChildId songChildId = new SongChildId(albumChildId);
 
             ChartSong chartSong = new ChartSong();
-            chartSong.setChart();
+            chartSong.setChart(risingChart);
+            chartSong.setSong(findSong);
+            chartSong.setSongChildId(songChildId);
+            chartSong.setSongName(findSong.getSongName());
+            chartSong.setGenre(findSong.getGenre());
+
+            chartSongRepository.save(chartSong);
 
         }
     }
