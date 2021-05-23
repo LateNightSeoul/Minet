@@ -2,15 +2,18 @@ package com.Minet.Minet.repository;
 
 import com.Minet.Minet.domain.music.Song;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 
-public class CustomSongRepository {
+@Repository
+public class CustomChartRepository {
 
     @Autowired
     EntityManager em;
 
-//    public Song findSongUrl() {
-//        Song findSong = em.createQuery("select s from Song s, Album a where a.albumName = ")
+//    public List<Song> createDailyChart() {
+//
 //    }
 }

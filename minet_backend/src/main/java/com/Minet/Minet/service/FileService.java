@@ -1,6 +1,5 @@
 package com.Minet.Minet.service;
 
-import com.Minet.Minet.domain.enumTypes.Genre;
 import com.Minet.Minet.domain.member.Artist;
 import com.Minet.Minet.domain.member.Member;
 import com.Minet.Minet.domain.music.Album;
@@ -14,22 +13,15 @@ import com.Minet.Minet.repository.ArtistRepository;
 import com.Minet.Minet.repository.MemberRepository;
 import com.Minet.Minet.repository.SongRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.configurationprocessor.json.JSONException;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.persistence.EntityManager;
 import java.io.IOException;
 import java.nio.file.*;
-import java.security.Principal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -66,7 +58,6 @@ public class FileService {
         }
 
         Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
-
 
         return targetPath.toString();
     }
@@ -119,8 +110,4 @@ public class FileService {
 
         return songRepository.save(song);
     }
-
-//    public String getSongUrl(String artist, String album, String song) {
-//        artistRepository.
-//    }
 }

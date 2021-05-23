@@ -3,10 +3,13 @@ package com.Minet.Minet.domain.statistic;
 import com.Minet.Minet.domain.member.Member;
 import com.Minet.Minet.domain.music.Song;
 import com.Minet.Minet.domain.music.ids.SongChildId;
+import com.Minet.Minet.domain.music.ids.SongLikeId;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+
+import java.time.LocalDateTime;
 
 import static javax.persistence.FetchType.*;
 
@@ -15,7 +18,7 @@ import static javax.persistence.FetchType.*;
 public class SongLike {
 
     @EmbeddedId
-    private SongChildId songChildId;
+    private SongLikeId songLikeId;
 
     @MapsId("albumChildId")
     @ManyToOne(fetch = LAZY)

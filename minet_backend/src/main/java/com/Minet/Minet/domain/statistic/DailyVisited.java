@@ -2,6 +2,7 @@ package com.Minet.Minet.domain.statistic;
 
 import com.Minet.Minet.domain.music.Song;
 import com.Minet.Minet.domain.music.ids.SongChildId;
+import com.Minet.Minet.domain.music.ids.SongLikeId;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,12 +14,13 @@ import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter @Setter
-public class Visited {
+public class DailyVisited {
+
     @EmbeddedId
-    private SongChildId songChildId;
+    private SongLikeId songLikeId;
 
     @MapsId("albumChildId")
-    @OneToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumns({
             @JoinColumn(name = "artist_id"),
             @JoinColumn(name = "album_url"),
