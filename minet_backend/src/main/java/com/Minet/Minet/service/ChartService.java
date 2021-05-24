@@ -1,5 +1,6 @@
 package com.Minet.Minet.service;
 
+import com.Minet.Minet.controller.response.RisingChartResponse;
 import com.Minet.Minet.domain.enumTypes.ChartType;
 import com.Minet.Minet.domain.music.Chart;
 import com.Minet.Minet.domain.music.ChartSong;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,7 +25,7 @@ public class ChartService {
     ChartSongRepository chartSongRepository;
 
     @Transactional
-    public List<ChartSong> getRisingChart() throws IllegalAccessException {
+    public List<RisingChartResponse> getRisingChart() throws IllegalAccessException {
         Chart risingChart = null;
         List<Chart> findChart = chartRepository.findByChartDate(LocalDate.now());
         for(Chart chart : findChart) {
@@ -34,6 +36,11 @@ public class ChartService {
         if(risingChart == null) {
             throw new IllegalAccessException("차트가 존재하지 않습니다.");
         }
-        return chartSongRepository.findChartSongsByChart(risingChart);
+        List<RisingChartResponse> risingChartResponses = new ArrayList<>();
+        List<ChartSong> chartSongs = chartSongRepository.findChartSongsByChart(risingChart);
+
+        for (ChartSong chartSong : chartSongs) {
+            
+        }
     }
 }
