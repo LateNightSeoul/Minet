@@ -25,11 +25,15 @@ public class ChartSong {
     })
     private Song song;
 
+    private Long rank;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "chart_id")
     private Chart chart;
 
     private String songName;
+
+    private String artistName;
 
     @Enumerated(EnumType.STRING)
     private Genre genre;

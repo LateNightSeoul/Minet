@@ -5,7 +5,6 @@ import com.Minet.Minet.domain.music.Chart;
 import com.Minet.Minet.domain.music.ChartSong;
 import com.Minet.Minet.repository.ChartRepository;
 import com.Minet.Minet.repository.ChartSongRepository;
-import org.hibernate.exception.DataException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

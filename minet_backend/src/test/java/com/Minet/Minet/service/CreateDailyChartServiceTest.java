@@ -281,6 +281,9 @@ public class CreateDailyChartServiceTest {
             chartSong.setSongChildId(songChildId);
             chartSong.setSongName(findSong.getSongName());
             chartSong.setGenre(findSong.getGenre());
+            chartSong.setRank(Long.valueOf(i + 1));
+            Optional<Artist> artist = artistRepository.findById(chartSong.getSongChildId().getAlbumChildId().getArtistChildId().getArtist_id());
+            chartSong.setArtistName(artist.get().getArtistName());
 
             chartSongRepository.save(chartSong);
 
