@@ -7,6 +7,7 @@ import com.Minet.Minet.dto.member.LoginDto;
 import com.Minet.Minet.jwt.JwtFilter;
 import com.Minet.Minet.jwt.TokenProvider;
 import com.Minet.Minet.service.AuthService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -20,18 +21,13 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
+@RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class AuthController {
 
-    @Autowired
-    private TokenProvider tokenProvider;
-
-    @Autowired
-    private AuthenticationManagerBuilder authenticationManagerBuilder;
-
-    @Autowired
-    private AuthService authService;
-
+    private final TokenProvider tokenProvider;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final AuthService authService;
 
     @PostMapping("/join")
     public ResponseEntity<Member> join(
