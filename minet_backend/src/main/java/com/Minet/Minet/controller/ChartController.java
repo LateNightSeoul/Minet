@@ -23,8 +23,8 @@ public class ChartController {
     ChartService chartService;
 
     @GetMapping("/rising")
-    public ResponseEntity<List<ChartSong>> getRisingChart() throws IllegalAccessException {
+    public List<ChartSong> getRisingChart() throws IllegalAccessException {
         List<ChartSong> risingChart = chartService.getRisingChart();
-        return new ResponseEntity<>(risingChart, HttpStatus.OK);
+        return risingChart;
     }
 }
