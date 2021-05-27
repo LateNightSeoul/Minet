@@ -2,6 +2,7 @@ package com.Minet.Minet.domain.music;
 
 import com.Minet.Minet.domain.enumTypes.Genre;
 import com.Minet.Minet.domain.music.ids.SongChildId;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,6 +19,7 @@ public class ChartSong {
 
     @MapsId("albumChildId")
     @ManyToOne(fetch = LAZY)
+    @JsonIgnore
     @JoinColumns({
             @JoinColumn(name="song_url", referencedColumnName = "song_url"),
             @JoinColumn(name = "album_url", referencedColumnName = "album_url"),

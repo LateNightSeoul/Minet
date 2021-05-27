@@ -18,7 +18,7 @@ public class SearchController {
     SongESService songESService;
 
     @GetMapping("/song")
-    public List<Map<String, Object>> search(@RequestParam("keyword") String keyword, @RequestParam("type") String type ,Pageable pageable) throws IOException {
+    public List<Map<String, Object>> search(@RequestParam("keyword") String keyword, @RequestParam("type") String type, Pageable pageable) throws IOException {
         return songESService.search(keyword, type, pageable);
     }
 }
