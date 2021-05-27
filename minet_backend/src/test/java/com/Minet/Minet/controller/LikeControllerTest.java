@@ -23,7 +23,6 @@ public class LikeControllerTest extends AbstractControllerTest{
 
         MultiValueMap<String, String> infos = new LinkedMultiValueMap<>();
 
-
         mockMvc.perform(post("/like/addSongLike")).andExpect(status().isOk());
     }
 }
