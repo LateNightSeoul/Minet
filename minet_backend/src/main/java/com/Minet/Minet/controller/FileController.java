@@ -1,5 +1,6 @@
 package com.Minet.Minet.controller;
 import com.Minet.Minet.controller.response.UploadSongResponse;
+import com.Minet.Minet.converter.SongInfoConverter;
 import com.Minet.Minet.domain.enumTypes.Genre;
 import com.Minet.Minet.domain.member.Member;
 import com.Minet.Minet.domain.music.Album;
@@ -14,6 +15,7 @@ import com.Minet.Minet.repository.SongRepository;
 import com.Minet.Minet.security.Authority;
 import com.Minet.Minet.service.FileService;
 import com.Minet.Minet.service.MemberService;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,21 +38,13 @@ import java.util.Arrays;
 
 @RestController
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 @RequestMapping("/file")
 public class FileController {
 
-    @Autowired
-    FileService fileService;
-
-    @Autowired
-    SongRepository songRepository;
-
-    @Autowired
-    MemberService memberService;
-
-    @Autowired
-    SongESService songESService;
-
+    private final FileService fileService;
+    private final MemberService memberService;
+    private final SongESService songESService;
 
     @SneakyThrows
     @PostMapping("/upload/album")
@@ -58,28 +52,18 @@ public class FileController {
                                                           @RequestParam("songInfos") String[] songInfoStrings,
                                                           @RequestParam("image") MultipartFile uploadImage,
                                                           Principal principal)  {
-
-        UploadSongInfoWrapperDto songInfos = new UploadSongInfoWrapperDto();
-
-        for (String songInfo : songInfoStrings) {
-            JSONObject jsonObject = new JSONObject(songInfo);
-            UploadSongInfoDto uploadSongInfoDto = UploadSongInfoDto.builder().songName(jsonObject.getString("songName"))
-                    .albumName(jsonObject.getString("albumName"))
-                    .songNumber(jsonObject.getInt("songNumber"))
-                    .releaseDate(LocalDate.parse(jsonObject.getString("releaseDate"), DateTimeFormatter.ISO_DATE))
-                    .artist(jsonObject.getString("artist"))
-                    .genre(Genre.fromString(jsonObject.getString("genre")))
-                    .fileName(jsonObject.getString("fileName")).build();
-            songInfos.getUploadSongInfoDto().add(uploadSongInfoDto);
-        }
+        SongInfoConverter songInfoConverter = new SongInfoConverter();
+        UploadSongInfoWrapperDto songInfos = songInfoConverter.getSongInfo(songInfoStrings);
 
         try {
-            String imagePath = null;
+            String imagePath;
             Member currentUser = memberService.findByUserId(principal.getName()).get();
             String dirPath = fileService.makedir(Arrays.asList(songInfos.getUploadSongInfoDto().get(0).getArtist(), songInfos.getUploadSongInfoDto().get(0).getAlbumName()));
 
             if(!uploadImage.isEmpty()) {
                 imagePath = fileService.saveFile(uploadImage, dirPath);
+            } else {
+                imagePath = null;
             }
 
             Album albumSaved = fileService.saveAlbumInfo(currentUser, songInfos.getUploadSongInfoDto().get(0), imagePath);
@@ -93,6 +77,7 @@ public class FileController {
                     }
                 }
             }
+
             return new ResponseEntity<UploadSongResponse>(new UploadSongResponse("앨범 업로드 성공", albumSaved.getAlbumName()), HttpStatus.OK);
 
         } catch (IOException e) {
@@ -104,14 +89,12 @@ public class FileController {
     }
 
 
-    @GetMapping("/music/download")
+    @GetMapping("/download")
     @ResponseStatus(HttpStatus.OK)
-    public void downloadMusic(@RequestParam("songUrl") String songUrl,
-                        HttpServletRequest request,
+    public void downloadMusic(@RequestParam("fileUrl") String songUrl,
                         HttpServletResponse response) throws IOException {
 
         File filePath = new File(URLDecoder.decode(songUrl, "UTF-8"));
-
         Long startRange = 0L;
         Long endRange = filePath.length();
 
@@ -139,40 +122,4 @@ public class FileController {
         }
     }
 
-    @GetMapping("/image/download")
-    public void downloadImage(@RequestParam("photoUrl") String photoUrl, HttpServletRequest request,
-                              HttpServletResponse response) throws UnsupportedEncodingException {
-
-        File filePath = new File(URLDecoder.decode(photoUrl, "UTF-8"));
-
-        Long startRange = 0L;
-        Long endRange = filePath.length();
-
-        try(RandomAccessFile randomAccessFile = new RandomAccessFile(filePath, "r");
-            ServletOutputStream sos = response.getOutputStream();){
-
-            Integer bufferSize = 1024, data = 0;
-            byte[] b = new byte[bufferSize];
-            Long count = startRange;
-
-            randomAccessFile.seek(startRange);
-
-            while(true) {
-                data = randomAccessFile.read(b, 0, b.length);
-
-                if(count <= endRange) {
-                    sos.write(b, 0, data);
-                    count += bufferSize;
-                    randomAccessFile.seek(count);
-                } else {
-                    break;
-                }
-            }
-            sos.flush();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }

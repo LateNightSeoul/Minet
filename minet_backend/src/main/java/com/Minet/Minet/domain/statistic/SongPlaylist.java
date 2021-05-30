@@ -2,20 +2,17 @@ package com.Minet.Minet.domain.statistic;
 
 import com.Minet.Minet.domain.member.Member;
 import com.Minet.Minet.domain.music.Song;
-import com.Minet.Minet.domain.music.ids.SongChildId;
 import com.Minet.Minet.domain.music.ids.SongLikeId;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 
-import java.time.LocalDateTime;
-
-import static javax.persistence.FetchType.*;
+import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter @Setter
-public class SongLike {
+public class SongPlaylist {
 
     @EmbeddedId
     private SongLikeId songLikeId;
