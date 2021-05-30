@@ -57,12 +57,14 @@ public class FileController {
         UploadSongInfoWrapperDto songInfos = songInfoConverter.getSongInfo(songInfoStrings);
 
         try {
-            String imagePath = null;
+            String imagePath;
             Member currentUser = memberService.findByUserId(principal.getName()).get();
             String dirPath = fileService.makedir(Arrays.asList(songInfos.getUploadSongInfoDto().get(0).getArtist(), songInfos.getUploadSongInfoDto().get(0).getAlbumName()));
 
             if(!uploadImage.isEmpty()) {
                 imagePath = fileService.saveFile(uploadImage, dirPath);
+            } else {
+                imagePath = null;
             }
 
             Album albumSaved = fileService.saveAlbumInfo(currentUser, songInfos.getUploadSongInfoDto().get(0), imagePath);
@@ -76,6 +78,7 @@ public class FileController {
                     }
                 }
             }
+
             return new ResponseEntity<UploadSongResponse>(new UploadSongResponse("앨범 업로드 성공", albumSaved.getAlbumName()), HttpStatus.OK);
 
         } catch (IOException e) {
