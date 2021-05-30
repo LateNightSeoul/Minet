@@ -75,6 +75,7 @@ public class FileService {
         return dirPath.toString();
     }
 
+    @Transactional
     public Album saveAlbumInfo(Member currentUser, UploadSongInfoDto songInfo, String imagePath) {
         Artist userArtist = currentUser.getArtist();
         String albumUrl = imagePath.substring(0, StringUtils.cleanPath(imagePath).lastIndexOf("/") + 1);

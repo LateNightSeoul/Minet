@@ -97,14 +97,12 @@ public class FileController {
     }
 
 
-    @GetMapping("/music/download")
+    @GetMapping("/download")
     @ResponseStatus(HttpStatus.OK)
-    public void downloadMusic(@RequestParam("songUrl") String songUrl,
-                        HttpServletRequest request,
+    public void downloadMusic(@RequestParam("fileUrl") String songUrl,
                         HttpServletResponse response) throws IOException {
 
         File filePath = new File(URLDecoder.decode(songUrl, "UTF-8"));
-
         Long startRange = 0L;
         Long endRange = filePath.length();
 
@@ -132,40 +130,4 @@ public class FileController {
         }
     }
 
-    @GetMapping("/image/download")
-    public void downloadImage(@RequestParam("photoUrl") String photoUrl, HttpServletRequest request,
-                              HttpServletResponse response) throws UnsupportedEncodingException {
-
-        File filePath = new File(URLDecoder.decode(photoUrl, "UTF-8"));
-
-        Long startRange = 0L;
-        Long endRange = filePath.length();
-
-        try(RandomAccessFile randomAccessFile = new RandomAccessFile(filePath, "r");
-            ServletOutputStream sos = response.getOutputStream();){
-
-            Integer bufferSize = 1024, data = 0;
-            byte[] b = new byte[bufferSize];
-            Long count = startRange;
-
-            randomAccessFile.seek(startRange);
-
-            while(true) {
-                data = randomAccessFile.read(b, 0, b.length);
-
-                if(count <= endRange) {
-                    sos.write(b, 0, data);
-                    count += bufferSize;
-                    randomAccessFile.seek(count);
-                } else {
-                    break;
-                }
-            }
-            sos.flush();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }
