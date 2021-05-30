@@ -1,5 +1,6 @@
 package com.Minet.Minet.controller;
 import com.Minet.Minet.controller.response.UploadSongResponse;
+import com.Minet.Minet.converter.SongInfoConverter;
 import com.Minet.Minet.domain.enumTypes.Genre;
 import com.Minet.Minet.domain.member.Member;
 import com.Minet.Minet.domain.music.Album;
@@ -44,6 +45,7 @@ public class FileController {
     private final FileService fileService;
     private final MemberService memberService;
     private final SongESService songESService;
+    private final SongInfoConverter songInfoConverter;
 
     @SneakyThrows
     @PostMapping("/upload/album")
@@ -52,19 +54,7 @@ public class FileController {
                                                           @RequestParam("image") MultipartFile uploadImage,
                                                           Principal principal)  {
 
-        UploadSongInfoWrapperDto songInfos = new UploadSongInfoWrapperDto();
-
-        for (String songInfo : songInfoStrings) {
-            JSONObject jsonObject = new JSONObject(songInfo);
-            UploadSongInfoDto uploadSongInfoDto = UploadSongInfoDto.builder().songName(jsonObject.getString("songName"))
-                    .albumName(jsonObject.getString("albumName"))
-                    .songNumber(jsonObject.getInt("songNumber"))
-                    .releaseDate(LocalDate.parse(jsonObject.getString("releaseDate"), DateTimeFormatter.ISO_DATE))
-                    .artist(jsonObject.getString("artist"))
-                    .genre(Genre.fromString(jsonObject.getString("genre")))
-                    .fileName(jsonObject.getString("fileName")).build();
-            songInfos.getUploadSongInfoDto().add(uploadSongInfoDto);
-        }
+        UploadSongInfoWrapperDto songInfos = songInfoConverter.getSongInfo(songInfoStrings);
 
         try {
             String imagePath = null;
