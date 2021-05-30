@@ -1,6 +1,7 @@
 package com.Minet.Minet.controller;
 
 import com.Minet.Minet.es.SongESService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
@@ -11,11 +12,11 @@ import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 @RequestMapping("/search")
 public class SearchController {
 
-    @Autowired
-    SongESService songESService;
+    private final SongESService songESService;
 
     @GetMapping("/song")
     public List<Map<String, Object>> search(@RequestParam("keyword") String keyword, @RequestParam("type") String type, Pageable pageable) throws IOException {

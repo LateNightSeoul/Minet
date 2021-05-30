@@ -30,9 +30,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/join")
-    public ResponseEntity<Member> join(
-            @RequestBody JoinDto joinDto
-    ) {
+    public ResponseEntity<Member> join(@RequestBody JoinDto joinDto) {
         return ResponseEntity.ok(authService.join(joinDto));
     }
 

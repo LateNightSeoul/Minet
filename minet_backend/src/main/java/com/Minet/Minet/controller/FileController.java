@@ -14,6 +14,7 @@ import com.Minet.Minet.repository.SongRepository;
 import com.Minet.Minet.security.Authority;
 import com.Minet.Minet.service.FileService;
 import com.Minet.Minet.service.MemberService;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,21 +37,13 @@ import java.util.Arrays;
 
 @RestController
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 @RequestMapping("/file")
 public class FileController {
 
-    @Autowired
-    FileService fileService;
-
-    @Autowired
-    SongRepository songRepository;
-
-    @Autowired
-    MemberService memberService;
-
-    @Autowired
-    SongESService songESService;
-
+    private final FileService fileService;
+    private final MemberService memberService;
+    private final SongESService songESService;
 
     @SneakyThrows
     @PostMapping("/upload/album")

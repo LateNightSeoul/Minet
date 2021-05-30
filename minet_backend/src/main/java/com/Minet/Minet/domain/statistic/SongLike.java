@@ -27,7 +27,6 @@ public class SongLike {
             @JoinColumn(name = "artist_id"),
             @JoinColumn(name = "song_url")
     })
-
     private Song song;
 
     @ManyToOne(fetch = LAZY)
