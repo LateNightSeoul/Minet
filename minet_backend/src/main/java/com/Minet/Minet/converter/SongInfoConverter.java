@@ -11,6 +11,8 @@ import java.time.format.DateTimeFormatter;
 
 public class SongInfoConverter {
 
+    UploadSongInfoWrapperDto songInfos = new UploadSongInfoWrapperDto();
+
     public UploadSongInfoDto buildUploadSongInfoDto(String songInfo) throws JSONException {
         JSONObject jsonObject = new JSONObject(songInfo);
         UploadSongInfoDto uploadSongInfoDto = UploadSongInfoDto.builder().songName(jsonObject.getString("songName"))
@@ -24,7 +26,6 @@ public class SongInfoConverter {
     }
 
     public UploadSongInfoWrapperDto getSongInfo(String[] songInfoStrings) throws JSONException {
-        UploadSongInfoWrapperDto songInfos = new UploadSongInfoWrapperDto();
         for (String songInfo : songInfoStrings) {
             songInfos.getUploadSongInfoDto().add(buildUploadSongInfoDto(songInfo));
         }

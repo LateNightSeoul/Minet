@@ -45,7 +45,6 @@ public class FileController {
     private final FileService fileService;
     private final MemberService memberService;
     private final SongESService songESService;
-    private final SongInfoConverter songInfoConverter;
 
     @SneakyThrows
     @PostMapping("/upload/album")
@@ -53,7 +52,7 @@ public class FileController {
                                                           @RequestParam("songInfos") String[] songInfoStrings,
                                                           @RequestParam("image") MultipartFile uploadImage,
                                                           Principal principal)  {
-
+        SongInfoConverter songInfoConverter = new SongInfoConverter();
         UploadSongInfoWrapperDto songInfos = songInfoConverter.getSongInfo(songInfoStrings);
 
         try {
