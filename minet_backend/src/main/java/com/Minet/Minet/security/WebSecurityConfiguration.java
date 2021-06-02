@@ -65,6 +65,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("search/song/recent").permitAll()
                 .antMatchers("chart/rising").permitAll()
                 .antMatchers("like/addSongLike").permitAll()
+                .antMatchers("like/getSongLike").permitAll()
+                .antMatchers("follow/add").permitAll()
+                .antMatchers("follow/list").permitAll()
                 .anyRequest().authenticated()
 
                 .and()
