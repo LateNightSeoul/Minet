@@ -12,7 +12,6 @@
 
 # 기술 스택 📃
 
-<br/>
 
 #### Back-end
 + Spring, Spring Batch, Quartz, Spring Security
@@ -36,7 +35,7 @@
 <br/>
 
 # 기능 Overview 📇
-<br/>
+
 - 로그인, 회원가입, 마이페이지
 - 세션 관련 기능
 - 음악 다운로드, 플레이 업로드 등의 CRUD
