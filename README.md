@@ -9,8 +9,11 @@
 
 <br/>
 <br/>
+
 # 기술 스택 📃
+
 <br/>
+
 #### Back-end
 + Spring, Spring Batch, Quartz, Spring Security
 + Jwt
@@ -20,9 +23,11 @@
 
 <br/>
 <br/>
+
 # 실행 방법 💻
 
 <br/>
+
 1. Java를 실행할 수 있는 환경을 구축합니다.
 2. 해당 애플리케이션의 main 클래스를 Run합니다.
 3. localhost:8080으로 접속이 가능합니다.
