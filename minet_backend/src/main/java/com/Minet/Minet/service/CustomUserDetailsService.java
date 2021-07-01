@@ -23,11 +23,10 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private MemberRepository memberRepository;
 
-
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String userid) throws UsernameNotFoundException {
-        Optional<Member> member = memberRepository.findOneByUserid(userid);
+        Optional<Member> member = memberRepository.findOneByEmail(userid);
         if (member.isEmpty()) {
             throw new UsernameNotFoundException("데이터베이스에서 찾을 수 없습니다.");
         }
@@ -39,6 +38,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         List<GrantedAuthority> grantedAuthority = new ArrayList<>();
         grantedAuthority.add(new SimpleGrantedAuthority(member.getAuthority().toString()));
 
-        return new User(member.getUserid(), member.getPassword(), grantedAuthority);
+        return new User(member.getEmail(), member.getPassword(), grantedAuthority);
     }
 }

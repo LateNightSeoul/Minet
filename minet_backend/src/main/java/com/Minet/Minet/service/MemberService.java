@@ -13,8 +13,7 @@ public class MemberService {
     @Autowired
     MemberRepository memberRepository;
 
-
     public Optional<Member> findByUserId(String userId) {
-        return memberRepository.findOneByUserid(userId);
+        return memberRepository.findOneByEmail(userId);
     }
 }

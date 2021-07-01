@@ -32,7 +32,7 @@ public class AuthService {
 
     @Transactional
     public Member join(JoinDto joinDto) {
-        if(!memberRepository.findOneByUserid(joinDto.getUserid()).isEmpty()) {
+        if(!memberRepository.findOneByEmail(joinDto.getEmail()).isEmpty()) {
             throw new RuntimeException("이미 가입된 id입니다.");
         }
 
@@ -40,7 +40,7 @@ public class AuthService {
 
         Member member = Member.builder()
                 .username(joinDto.getUsername())
-                .userid(joinDto.getUserid())
+                .email(joinDto.getEmail())
                 .password(passwordEncoder.encode(joinDto.getPassword()))
                 .phone(joinDto.getPhone())
                 .enabled(true)

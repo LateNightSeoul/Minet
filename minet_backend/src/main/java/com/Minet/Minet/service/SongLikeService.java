@@ -30,7 +30,7 @@ public class SongLikeService {
 
     @Transactional
     public SongLike addSongLike(Principal principal, String songUrl, String albumUrl, Long artistId) throws IllegalAccessException {
-        Optional<Member> member = memberRepository.findOneByUserid(principal.getName());
+        Optional<Member> member = memberRepository.findOneByEmail(principal.getName());
         if(member.isEmpty()) {
             throw new IllegalAccessException("해당하는 member 정보가 없습니다.");
         }
@@ -47,7 +47,7 @@ public class SongLikeService {
     }
 
     public List<SongLike> getSongLike(Principal principal) throws IllegalAccessException {
-        Optional<Member> member = memberRepository.findOneByUserid(principal.getName());
+        Optional<Member> member = memberRepository.findOneByEmail(principal.getName());
         if(member.isEmpty()) {
             throw new IllegalAccessException("해당하는 member 정보가 없습니다.");
         }

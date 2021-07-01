@@ -20,7 +20,7 @@ public class JoinDto {
 
     private String username;
 
-    private String userid;
+    private String email;
 
     private String password;
 
