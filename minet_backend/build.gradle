@@ -24,6 +24,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'junit:junit:4.12'
 	implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+	implementation("com.google.guava:guava:30.1.1-jre")
+	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.6.2'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
     compileOnly 'org.projectlombok:lombok'
