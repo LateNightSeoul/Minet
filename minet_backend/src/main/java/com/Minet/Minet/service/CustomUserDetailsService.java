@@ -31,6 +31,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("데이터베이스에서 찾을 수 없습니다.");
         }
         User user = createUser(userid, member.get());
+
         return user;
     }
 

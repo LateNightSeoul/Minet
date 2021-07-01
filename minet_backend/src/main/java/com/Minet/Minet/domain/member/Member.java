@@ -18,7 +18,7 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
-    private String username;
+    private String userName;
 
     private String email;
 
@@ -30,6 +30,8 @@ public class Member {
     private String phone;
 
     private boolean enabled;
+
+    private Long loginCount;
 
     private LocalDateTime createTime;
 

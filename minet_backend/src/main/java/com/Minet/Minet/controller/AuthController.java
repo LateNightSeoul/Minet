@@ -1,14 +1,13 @@
 package com.Minet.Minet.controller;
 
 import com.Minet.Minet.domain.member.Member;
-import com.Minet.Minet.dto.TokenDto;
+import com.Minet.Minet.dto.AuthenticationDto;
 import com.Minet.Minet.dto.member.JoinDto;
 import com.Minet.Minet.dto.member.LoginDto;
 import com.Minet.Minet.jwt.JwtFilter;
 import com.Minet.Minet.jwt.TokenProvider;
 import com.Minet.Minet.service.AuthService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +34,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenDto> login(@Valid @RequestBody LoginDto loginDto) {
+    public ResponseEntity<AuthenticationDto> login(@Valid @RequestBody LoginDto loginDto) {
 
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginDto.getUserid(), loginDto.getPassword());
@@ -48,6 +47,6 @@ public class AuthController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
 
-        return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(new AuthenticationDto(jwt, authentication.getDetails()), httpHeaders, HttpStatus.OK);
     }
 }
