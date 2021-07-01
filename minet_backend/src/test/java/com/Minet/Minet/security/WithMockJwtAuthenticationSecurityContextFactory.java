@@ -1,9 +1,13 @@
 package com.Minet.Minet.security;
 
+import com.Minet.Minet.domain.member.Email;
+import com.Minet.Minet.jwt.JwtAuthentication;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
+
+import static org.springframework.security.core.authority.AuthorityUtils.createAuthorityList;
 
 public class WithMockJwtAuthenticationSecurityContextFactory implements WithSecurityContextFactory<WithMockJwtAuthentication> {
     @Override
