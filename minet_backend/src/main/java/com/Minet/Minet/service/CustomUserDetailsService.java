@@ -27,19 +27,19 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String userid) throws UsernameNotFoundException {
-        Optional<Member> member = memberRepository.findOneByEmail(userid);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Optional<Member> member = memberRepository.findOneByEmail(email);
         if (member.isEmpty()) {
             throw new UsernameNotFoundException("데이터베이스에서 찾을 수 없습니다.");
         }
-        return createUser(userid, member.get());
+        return createUser(email, member.get());
     }
 
-    private CustomUser createUser(String username, Member member) {
+    private CustomUser createUser(String email, Member member) {
         List<GrantedAuthority> grantedAuthority = new ArrayList<>();
         grantedAuthority.add(new SimpleGrantedAuthority(member.getAuthority().toString()));
 
-        return new CustomUser(createMemberDto(member), member.getEmail(), member.getPassword(), grantedAuthority);
+        return new CustomUser(createMemberDto(member), email, member.getPassword(), grantedAuthority);
     }
 
     private MemberDto createMemberDto(Member member) {

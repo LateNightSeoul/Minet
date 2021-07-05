@@ -39,7 +39,7 @@ public class AuthService {
         System.out.println(joinDto.getAuthority());
 
         Member member = Member.builder()
-                .userName(joinDto.getUsername())
+                .userName(joinDto.getUserName())
                 .email(joinDto.getEmail())
                 .password(passwordEncoder.encode(joinDto.getPassword()))
                 .phone(joinDto.getPhone())
