@@ -30,6 +30,7 @@ public class Artist {
     private Member member;
 
     @JsonIgnore
+    @Builder.Default
     @OneToMany(mappedBy = "artist", cascade = CascadeType.ALL)
     private List<Album> albums = new ArrayList<>();
 

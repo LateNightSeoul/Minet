@@ -35,6 +35,7 @@ public class Album {
 
     @OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
     @JsonIgnore
+    @Builder.Default
     private List<Song> songs = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
