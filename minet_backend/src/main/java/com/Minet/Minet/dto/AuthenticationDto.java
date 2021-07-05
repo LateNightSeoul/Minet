@@ -10,12 +10,11 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 public class AuthenticationDto {
 
     private String token;
 
-    private MemberDto member;
+    private MemberDto memberDto;
 
     public AuthenticationDto() {
 
