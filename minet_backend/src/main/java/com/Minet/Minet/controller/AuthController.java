@@ -4,6 +4,7 @@ import com.Minet.Minet.domain.member.Member;
 import com.Minet.Minet.dto.AuthenticationDto;
 import com.Minet.Minet.dto.member.JoinDto;
 import com.Minet.Minet.dto.member.LoginDto;
+import com.Minet.Minet.jwt.CustomUser;
 import com.Minet.Minet.jwt.JwtFilter;
 import com.Minet.Minet.jwt.TokenProvider;
 import com.Minet.Minet.service.AuthService;
@@ -15,6 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -41,12 +43,12 @@ public class AuthController {
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
+        CustomUser customUser = (CustomUser)authentication;
         String jwt = tokenProvider.createToken(authentication);
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
 
-        return new ResponseEntity<>(new AuthenticationDto(jwt, authentication.getDetails()), httpHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(new AuthenticationDto(jwt, customUser.getMemberDto()), httpHeaders, HttpStatus.OK);
     }
 }
