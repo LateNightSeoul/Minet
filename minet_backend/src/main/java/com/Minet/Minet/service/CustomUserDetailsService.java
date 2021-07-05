@@ -32,7 +32,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (member.isEmpty()) {
             throw new UsernameNotFoundException("데이터베이스에서 찾을 수 없습니다.");
         }
-        
         return createUser(userid, member.get());
     }
 
