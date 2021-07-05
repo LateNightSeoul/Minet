@@ -22,7 +22,7 @@ public class CustomUser extends User {
         this.memberDto = memberDto;
     }
 
-    public CustomUser(MemberDto memberDto, String password, Collection<? extends GrantedAuthority> authorities) {
+    public CustomUser(MemberDto memberDto, String username, String password, Collection<? extends GrantedAuthority> authorities) {
         super(null, password, authorities);
         this.memberDto = memberDto;
     }
