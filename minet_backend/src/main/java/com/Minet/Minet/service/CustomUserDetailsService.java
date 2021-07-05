@@ -39,7 +39,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         List<GrantedAuthority> grantedAuthority = new ArrayList<>();
         grantedAuthority.add(new SimpleGrantedAuthority(member.getAuthority().toString()));
 
-        return new CustomUser(createMemberDto(member), member.getPassword(), grantedAuthority);
+        return new CustomUser(createMemberDto(member), member.getEmail(), member.getPassword(), grantedAuthority);
     }
 
     private MemberDto createMemberDto(Member member) {

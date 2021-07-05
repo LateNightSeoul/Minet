@@ -58,7 +58,7 @@ public class FileServiceTest {
         Artist artist = new Artist();
 
         artist.setArtistName("ㅎㅇ용");
-        member.setUserid("leehae8");
+        member.setEmail("leehae8@NAVER.COM");
         member.setArtist(artist);
 
         memberRepository.save(member);
@@ -78,7 +78,7 @@ public class FileServiceTest {
     @Rollback(false)
     public void 회원저장() {
         Member member = new Member();
-        member.setUserid("gkdsfjsdfl");
+        member.setEmail("gkdsfjsdfl");
         memberRepository.save(member);
     }
 

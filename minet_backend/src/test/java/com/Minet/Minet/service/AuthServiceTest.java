@@ -39,7 +39,7 @@ public class AuthServiceTest {
     public void 회원가입_아티스트() throws Exception {
 
         JoinDto joinDto = JoinDto.builder()
-                .userid("leehae2")
+                .email("leehae2")
                 .artistName("선스톤")
                 .password(passwordEncoder.encode("1234"))
                 .authority(Authority.ROLE_ARTIST)
@@ -48,7 +48,7 @@ public class AuthServiceTest {
         Member memberJoined = authService.join(joinDto);
         Artist artist = memberJoined.getArtist();
 
-        assertEquals(artist.getMember().getUserid(), memberJoined.getUserid());
+        assertEquals(artist.getMember().getEmail(), memberJoined.getEmail());
     }
 
     @Test
@@ -57,14 +57,14 @@ public class AuthServiceTest {
     public void 회원가입_일반() throws Exception {
 
         JoinDto joinDto = JoinDto.builder()
-                .userid("leehae3")
+                .email("leehae3")
                 .password(passwordEncoder.encode("1234"))
                 .authority(Authority.ROLE_MEMBER)
                 .build();
 
         Member memberJoined = authService.join(joinDto);
 
-        assertEquals(joinDto.getUserid(), memberJoined.getUserid());
+        assertEquals(joinDto.getEmail(), memberJoined.getEmail());
     }
 
 }
