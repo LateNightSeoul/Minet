@@ -1,11 +1,13 @@
 package com.Minet.Minet.jwt;
 
 import com.Minet.Minet.dto.member.MemberDto;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 import java.util.Collection;
 
+@Getter
 public class CustomUser extends User {
 
     private final MemberDto memberDto;
