@@ -4,6 +4,7 @@ import com.Minet.Minet.domain.member.Member;
 import com.Minet.Minet.dto.AuthenticationDto;
 import com.Minet.Minet.dto.member.JoinDto;
 import com.Minet.Minet.dto.member.LoginDto;
+import com.Minet.Minet.dto.member.MemberDto;
 import com.Minet.Minet.jwt.CustomUser;
 import com.Minet.Minet.jwt.JwtFilter;
 import com.Minet.Minet.jwt.TokenProvider;
@@ -32,7 +33,6 @@ public class AuthController {
 
     @PostMapping("/join")
     public ResponseEntity<Member> join(@RequestBody JoinDto joinDto) {
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         return ResponseEntity.ok(authService.join(joinDto));
     }
 
@@ -40,16 +40,15 @@ public class AuthController {
     public ResponseEntity<AuthenticationDto> login(@Valid @RequestBody LoginDto loginDto) {
 
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginDto.getUserid(), loginDto.getPassword());
+                new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        CustomUser customUser = (CustomUser)authentication;
         String jwt = tokenProvider.createToken(authentication);
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
 
-        return new ResponseEntity<>(new AuthenticationDto(jwt, customUser.getMemberDto()), httpHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(new AuthenticationDto(jwt, ((CustomUser) authentication.getPrincipal()).getMemberDto()), httpHeaders, HttpStatus.OK);
     }
 }

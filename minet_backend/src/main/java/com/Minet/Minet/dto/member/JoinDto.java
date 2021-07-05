@@ -18,7 +18,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class JoinDto {
 
-    private String username;
+    private String userName;
 
     private String email;
 
