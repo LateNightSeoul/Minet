@@ -1,6 +1,8 @@
 package com.Minet.Minet.service;
 
 import com.Minet.Minet.domain.member.Member;
+import com.Minet.Minet.dto.member.MemberDto;
+import com.Minet.Minet.jwt.CustomUser;
 import com.Minet.Minet.repository.MemberRepository;
 import com.Minet.Minet.security.Authority;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,15 +32,26 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (member.isEmpty()) {
             throw new UsernameNotFoundException("데이터베이스에서 찾을 수 없습니다.");
         }
-        User user = createUser(userid, member.get());
-
-        return user;
+        
+        return createUser(userid, member.get());
     }
 
-    private User createUser(String username, Member member) {
+    private CustomUser createUser(String username, Member member) {
         List<GrantedAuthority> grantedAuthority = new ArrayList<>();
         grantedAuthority.add(new SimpleGrantedAuthority(member.getAuthority().toString()));
 
-        return new User(member.getEmail(), member.getPassword(), grantedAuthority);
+        return new CustomUser(createMemberDto(member), member.getPassword(), grantedAuthority);
+    }
+
+    private MemberDto createMemberDto(Member member) {
+        return MemberDto.builder()
+                .id(member.getId())
+                .userName(member.getUserName())
+                .email(member.getEmail())
+                .enabled(member.isEnabled())
+                .createTime(member.getCreateTime())
+                .loginCount(member.getLoginCount())
+                .authority(member.getAuthority())
+                .build();
     }
 }
