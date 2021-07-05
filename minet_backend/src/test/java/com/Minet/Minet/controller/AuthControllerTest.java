@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -34,7 +35,7 @@ class AuthControllerTest {
 
     @Test
     @Order(1)
-    @DisplayName("회원 가입")
+    @DisplayName("join")
     void join() throws Exception {
 
         JoinDto joinDto = JoinDto.builder()
@@ -49,9 +50,12 @@ class AuthControllerTest {
         ResultActions result = mockMvc.perform(
                 post("/join")
                         .accept(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(joinDto))
+                        .contentType(MediaType.APPLICATION_JSON)
         );
         result.andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(handler().handlerType(AuthController.class))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.userName", is("lee")));
 
     }
 
@@ -59,16 +63,16 @@ class AuthControllerTest {
     @Test
     @Order(2)
     @WithMockJwtAuthentication
-    @DisplayName("로그인 (토근이 올바른 경우)")
+    @DisplayName("login")
     void login() throws Exception {
         ResultActions result = mockMvc.perform(
                 post("/login")
                 .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
         );
         result.andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(handler().handlerType(AuthController.class))
                 .andExpect(handler().methodName("login"));
-
     }
 }
