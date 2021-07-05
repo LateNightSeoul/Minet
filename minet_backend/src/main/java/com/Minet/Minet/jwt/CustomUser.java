@@ -10,7 +10,7 @@ import java.util.Collection;
 @Getter
 public class CustomUser extends User {
 
-    private final MemberDto memberDto;
+    private MemberDto memberDto;
 
     public CustomUser(String username, String password, Collection<? extends GrantedAuthority> authorities, MemberDto memberDto) {
         super(username, password, authorities);
@@ -23,7 +23,15 @@ public class CustomUser extends User {
     }
 
     public CustomUser(MemberDto memberDto, String username, String password, Collection<? extends GrantedAuthority> authorities) {
-        super(null, password, authorities);
+        super(username, password, authorities);
+        this.memberDto = memberDto;
+    }
+
+    public MemberDto getMemberDto() {
+        return memberDto;
+    }
+
+    public void setMemberDto(MemberDto memberDto) {
         this.memberDto = memberDto;
     }
 }
