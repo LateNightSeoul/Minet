@@ -1,6 +1,7 @@
 package com.Minet.Minet.controller;
 
 import com.Minet.Minet.dto.member.JoinDto;
+import com.Minet.Minet.dto.member.LoginDto;
 import com.Minet.Minet.security.Authority;
 import com.Minet.Minet.security.WithMockJwtAuthentication;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -39,7 +40,7 @@ class AuthControllerTest {
     void join() throws Exception {
 
         JoinDto joinDto = JoinDto.builder()
-                .username("lee")
+                .userName("lee")
                 .email("lee@gamil.com")
                 .password("1234")
                 .phone("010-5612-2134")
@@ -65,8 +66,15 @@ class AuthControllerTest {
     @WithMockJwtAuthentication
     @DisplayName("login")
     void login() throws Exception {
+
+        LoginDto loginDto = LoginDto.builder()
+                .email("lee@gamil.com")
+                .password("1234")
+                .build();
+
         ResultActions result = mockMvc.perform(
                 post("/login")
+                .content(objectMapper.writeValueAsString(loginDto))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
         );
