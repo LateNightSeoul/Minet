@@ -2,10 +2,13 @@ package com.Minet.Minet.dto.member;
 
 import com.Minet.Minet.domain.member.Artist;
 import com.Minet.Minet.security.Authority;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Builder
+@Data
 public class MemberDto {
 
     private Long id;
