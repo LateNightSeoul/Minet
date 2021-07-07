@@ -23,9 +23,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+
 class AuthControllerTest {
 
     private MockMvc mockMvc;
+
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -33,6 +35,8 @@ class AuthControllerTest {
     public void setMockMvc(MockMvc mockMvc) {
         this.mockMvc = mockMvc;
     }
+
+    private String jwt;
 
     @Test
     @Order(1)
@@ -63,7 +67,6 @@ class AuthControllerTest {
 
     @Test
     @Order(2)
-    @WithMockJwtAuthentication
     @DisplayName("login")
     void login() throws Exception {
 
