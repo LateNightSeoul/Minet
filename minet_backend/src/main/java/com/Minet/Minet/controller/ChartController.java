@@ -3,6 +3,7 @@ package com.Minet.Minet.controller;
 import com.Minet.Minet.controller.response.RisingChartResponse;
 import com.Minet.Minet.domain.music.ChartSong;
 import com.Minet.Minet.service.ChartService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +18,10 @@ import java.util.List;
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/chart")
+@RequiredArgsConstructor
 public class ChartController {
 
-    @Autowired
-    ChartService chartService;
+    private final ChartService chartService;
 
     @GetMapping("/rising")
     public List<ChartSong> getRisingChart() throws IllegalAccessException {
