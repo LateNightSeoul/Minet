@@ -14,7 +14,7 @@
 
 
 #### Back-end
-+ Spring, Spring Batch, Quartz, Spring Security
++ Spring, Spring Security
 + Jwt
 + Lombok, JUnit4
 + JPA, MySQL, H2
