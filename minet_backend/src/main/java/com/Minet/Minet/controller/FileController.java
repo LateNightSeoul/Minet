@@ -54,16 +54,15 @@ public class FileController {
                                                           Principal principal)  {
         SongInfoConverter songInfoConverter = new SongInfoConverter();
         UploadSongInfoWrapperDto songInfos = songInfoConverter.getSongInfo(songInfoStrings);
+        String dirPath = null;
+        String imagePath = null;
+
 
         try {
-            String imagePath;
             Member currentUser = memberService.findByUserId(principal.getName()).get();
-            String dirPath = fileService.makedir(Arrays.asList(songInfos.getUploadSongInfoDto().get(0).getArtist(), songInfos.getUploadSongInfoDto().get(0).getAlbumName()));
-
+            dirPath = fileService.makedir(Arrays.asList(songInfos.getUploadSongInfoDto().get(0).getArtist(), songInfos.getUploadSongInfoDto().get(0).getAlbumName()));
             if(!uploadImage.isEmpty()) {
                 imagePath = fileService.saveFile(uploadImage, dirPath);
-            } else {
-                imagePath = null;
             }
 
             Album albumSaved = fileService.saveAlbumInfo(currentUser, songInfos.getUploadSongInfoDto().get(0), imagePath);
@@ -85,6 +84,7 @@ public class FileController {
         } catch (FileStorageException e) {
             e.printStackTrace();
         }
+        fileService.Redo(dirPath);
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 

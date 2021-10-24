@@ -19,6 +19,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.time.LocalDateTime;
@@ -73,6 +74,19 @@ public class FileService {
             }
         }
         return dirPath.toString();
+    }
+
+    public void Redo(String dirPath) throws IOException {
+        File file = new File(dirPath);
+        if(file.exists()) {
+            if (file.isDirectory()) {
+                File[] files = file.listFiles();
+                for (int i = 0; i < files.length; i++) {
+                    files[i].delete();
+                }
+            }
+        }
+        Files.deleteIfExists(Path.of(dirPath));
     }
 
     @Transactional
